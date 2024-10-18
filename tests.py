@@ -266,7 +266,26 @@ class RankerTester(unittest.TestCase):
         pass
 
     def test_check_Royal_Flush(self):
-        pass
+        hole_cards = [f'A{D}', f'J{D}']
+        community_cards = [f'10{D}', f'Q{D}', f'K{D}', f'10{S}', f'K{S}']
+        rank = Rankinator(hole_cards, community_cards)
+
+        # Check 4oaK is True Scenario 1: 2 in the hole_cards, 2 in the community
+        self.assertTrue(rank.check_Royal_Flush(), "Failed Royal Flush check - test 1")
+
+    def test_filter_cards_by_suit(self):
+        hole_cards = [f'A{D}', f'J{D}']
+        community_cards = [f'10{H}', f'Q{H}', f'K{C}', f'10{S}', f'K{S}']
+        all_cards = hole_cards + community_cards
+        rank = Rankinator(hole_cards, community_cards)
+        # Check returns 2 Hearts
+        self.assertEqual(rank.filter_cards_by_suit(all_cards, H), [f'10{H}', f'Q{H}'],"Failed filter by suit check")
+        # Check returns 2 Diamonds
+        self.assertEqual(rank.filter_cards_by_suit(all_cards, D), [f'A{D}', f'J{D}'],"Failed filter by suit check")
+        # Check returns 1 Club
+        self.assertEqual(rank.filter_cards_by_suit(all_cards,C), [f'K{C}'],"Failed filter by suit check")
+        # Check returns 2 Spades
+        self.assertEqual(rank.filter_cards_by_suit(all_cards, S), [f'10{S}', f'K{S}'],"Failed filter by suit check")
 
 
 # Run tests:

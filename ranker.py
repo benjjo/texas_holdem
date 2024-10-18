@@ -1,4 +1,5 @@
 from collections import Counter
+from deck import *
 
 
 class Rankinator:
@@ -52,10 +53,13 @@ class Rankinator:
         self.all_cards_ranks_numbered = self.convert_cards_to_integers(self.all_cards_ranks)
 
     # Work functions
-    def strip_suit(self, card_list: list):
+    def strip_suit(self, card_list: list) -> list:
         stripped_cards = list()
         [stripped_cards.append(s[0:-1]) for s in card_list]
         return stripped_cards
+
+    def filter_cards_by_suit(self, card_list: list, suit: str) -> list:
+        return [card for card in card_list if card[-1] == suit]
 
     def convert_cards_to_integers(self, cards: list):
         # cards must be a list that has been stripped of the suit.
@@ -83,7 +87,12 @@ class Rankinator:
 
     # hole_cards evaluators
     def check_Royal_Flush(self):
-        return self.check_Straight_Flush() and all(num in self.all_cards_ranks for num in ['10', 'J', 'Q', 'K', 'A'])
+        for suit in [H, D, C, S]:
+            flush_deck = self.filter_cards_by_suit(self.all_cards, suit)
+            if len(flush_deck) >= 5:
+                return all(card for card in flush_deck if card in
+                           [f'10{suit}', f'J{suit}', f'Q{suit}', f'K{suit}', f'A{suit}'])
+        return False
 
     def check_Straight_Flush(self):
         return self.check_Straight() and self.check_Flush()
@@ -100,9 +109,10 @@ class Rankinator:
         pairs = True if len(triples) > 1 else pairs
         return bool(pairs and triples)
 
-    def check_Flush(self, card_count=5):
+    def check_Flush(self, card_count=5, cards = None):
+        cards = cards if cards else self.all_cards
         community_cards_suits = list()
-        [community_cards_suits.append(s[-1]) for s in self.all_cards]
+        [community_cards_suits.append(s[-1]) for s in cards]
         count = Counter(community_cards_suits)
         suited = [item for item, count in count.items() if count >= card_count]
         return bool(suited)
