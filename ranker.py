@@ -1,3 +1,6 @@
+from collections import Counter
+
+
 class Rankinator:
     def __init__(self, hole_cards: list, community_cards: list):
         self.hole_cards = list()
@@ -15,7 +18,7 @@ class Rankinator:
     # Setters and getters
     def set_hole_cards(self, hole_cards_list: list):
         self.hole_cards = hole_cards_list
-        hole_cards = self.convert_cards_to_integers(self.strip_suite(self.hole_cards))
+        hole_cards = self.convert_cards_to_integers(self.strip_suit(self.hole_cards))
         self.hole_cards_ranks_numbered = hole_cards
 
     def set_community_cards(self, community_cards_list: list):
@@ -44,18 +47,18 @@ class Rankinator:
         [self.all_cards_ranks.append(s[0:-1]) for s in all_cards]
 
     def set_all_cards_as_numbers(self):
-        stripped_community_cards = self.strip_suite(self.community_cards)
+        stripped_community_cards = self.strip_suit(self.community_cards)
         self.set_community_cards_numbers(self.convert_cards_to_integers(stripped_community_cards))
         self.all_cards_ranks_numbered = self.convert_cards_to_integers(self.all_cards_ranks)
 
     # Work functions
-    def strip_suite(self, card_list: list):
+    def strip_suit(self, card_list: list):
         stripped_cards = list()
         [stripped_cards.append(s[0:-1]) for s in card_list]
         return stripped_cards
 
     def convert_cards_to_integers(self, cards: list):
-        # cards must be a list that has been stripped of the suite.
+        # cards must be a list that has been stripped of the suit.
         # Converts the all_card_values to integers.
         # Ace is duplicated to 1 and 14.
         # Sorts the list and returns a set.
@@ -80,22 +83,29 @@ class Rankinator:
 
     # hole_cards evaluators
     def check_Royal_Flush(self):
-        pass
+        return self.check_Straight_Flush() and all(num in self.all_cards_ranks for num in ['10', 'J', 'Q', 'K', 'A'])
 
     def check_Straight_Flush(self):
-        pass
+        return self.check_Straight() and self.check_Flush()
 
     def check_Four_of_a_Kind(self):
-        return self.all_cards.count(self.hole_card_1) == 4 or self.all_cards.count(self.hole_card_2) == 4
+        count = Counter(self.all_cards_ranks)
+        quads = [item for item, count in count.items() if count == 4]
+        return bool(quads)
 
     def check_Full_House(self):
-        return self.hole_card_1 != self.hole_card_2 and self.check_One_Pair() and self.check_Three_of_a_Kind()
+        count = Counter(self.all_cards_ranks)
+        pairs = [item for item, count in count.items() if count == 2]
+        triples = [item for item, count in count.items() if count == 3]
+        pairs = True if len(triples) > 1 else pairs
+        return bool(pairs and triples)
 
-    def check_Flush(self):
-        community_cards_suites = list()
-        [community_cards_suites.append(s[-1]) for s in self.community_cards]
-        return (self.hole_cards[0][-1] == self.hole_cards[1][-1]) and \
-               (community_cards_suites.count(self.hole_cards[0][-1]) >= 3)
+    def check_Flush(self, card_count=5):
+        community_cards_suits = list()
+        [community_cards_suits.append(s[-1]) for s in self.all_cards]
+        count = Counter(community_cards_suits)
+        suited = [item for item, count in count.items() if count >= card_count]
+        return bool(suited)
 
     def check_Straight(self, length=5):
         sorted_lst = list(set(self.all_cards_ranks_numbered))
@@ -119,23 +129,14 @@ class Rankinator:
         return False  # No straight with both hole cards
 
     def check_Three_of_a_Kind(self):
-        card1_count = self.all_cards_ranks.count(self.hole_card_1)
-        card2_count = self.all_cards_ranks.count(self.hole_card_2)
-        # Check for a pair in the community_cards that would make a FH
-        if (self.hole_card_1 == self.hole_card_2) and (len(self.community_ranks) > len(set(self.community_ranks))):
-            return False
-        return (card1_count == 3) or (card2_count == 3)
+        count = Counter(self.all_cards_ranks)
+        triples = [item for item, count in count.items() if count == 3]
+        return bool(triples)
 
     def check_Two_Pair(self) -> bool:
-        card1_count = self.all_cards_ranks.count(self.hole_card_1)
-        card2_count = self.all_cards_ranks.count(self.hole_card_2)
-        if (card1_count > 2) or (card2_count > 2) or (self.hole_card_1 == self.hole_card_2):
-            return False
-        return (card1_count == 2) and (card2_count == 2)
+        count = Counter(self.all_cards_ranks)
+        pairs = [item for item, count in count.items() if count == 2]
+        return len(pairs) == 2
 
     def check_One_Pair(self) -> bool:
-        card1_count = self.all_cards_ranks.count(self.hole_card_1)
-        card2_count = self.all_cards_ranks.count(self.hole_card_2)
-        if (card1_count > 2) or (card2_count > 2):
-            return False
-        return (card1_count == 2) != (card2_count == 2)  # Exclusive OR logic
+        return len(self.all_cards_ranks) > len(set(self.all_cards_ranks))

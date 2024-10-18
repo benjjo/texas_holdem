@@ -14,7 +14,7 @@ class RankerTester(unittest.TestCase):
         # Check that the deck is unique
         self.assertTrue(len(self.deck) == len(set(self.deck)))
 
-        # Check that there are 13 of each suite
+        # Check that there are 13 of each suit
         self.assertTrue(len([s for s in self.deck if s[-1] == H]) == 13)
         self.assertTrue(len([s for s in self.deck if s[-1] == D]) == 13)
         self.assertTrue(len([s for s in self.deck if s[-1] == S]) == 13)
@@ -48,54 +48,48 @@ class RankerTester(unittest.TestCase):
         rank.update_cards_in_play(hole_cards, community_cards)
         self.assertTrue(rank.check_One_Pair(), "Failed One-pair check - test 2")
 
-        # Check two-pair fails
-        hole_cards = [f'2{S}', f'K{D}']
+        # Check returns False in the case of no pair present
+        hole_cards = [f'7{S}', f'6{S}']
         rank.update_cards_in_play(hole_cards, community_cards)
         self.assertFalse(rank.check_One_Pair(), "Failed One-pair check - test 3")
-
-        # Check three of a kind fails
-        hole_cards = [f'2{S}', f'3{S}']
-        community_cards = [f'2{D}', f'3{D}', f'2{H}', f'10{C}', f'K{C}']
-        rank.update_cards_in_play(hole_cards, community_cards)
-        self.assertFalse(rank.check_One_Pair(), "Failed One-pair check - test 4")
-
-        # Check that full house fails
-        hole_cards = [f'2{S}', f'3{S}']
-        community_cards = [f'2{D}', f'3{D}', f'3{D}', f'10{C}', f'K{C}']
-        rank.update_cards_in_play(hole_cards, community_cards)
-        self.assertFalse(rank.check_One_Pair(), "Failed One-pair check - test 5")
-
-        # Check no pair using cards in the hole_cards fails
-        hole_cards = [f'2{S}', f'3{S}']
-        community_cards = [f'4{D}', f'6{D}', f'7{D}', f'10{C}', f'K{C}']
-        rank.update_cards_in_play(hole_cards, community_cards)
-        self.assertFalse(rank.check_One_Pair(), "Failed One-pair check - test 6")
-
-        # Check no pair using cards in the hole_cards fails with a pair in the community_cards
-        hole_cards = [f'2{S}', f'3{S}']
-        community_cards = [f'4{D}', f'6{D}', f'7{D}', f'K{D}', f'K{C}']
-        rank.update_cards_in_play(hole_cards, community_cards)
-        self.assertFalse(rank.check_One_Pair(), "Failed One-pair check - test 7")
 
     def test_two_pair(self):
         hole_cards = [f'2{S}', f'3{S}']
         community_cards = [f'2{D}', f'3{D}', f'8{S}', f'10{S}', f'K{S}']
         rank = Rankinator(hole_cards, community_cards)
 
-        # Check Two pair is True with perfect cards
+        # Check Two pair is True Scenario 1: with each card paired in the community cards.
         self.assertTrue(rank.check_Two_Pair(), "Failed Two-pair check - test 1")
 
-        # Check Two pair is False: Scenario 1: Your hole_cards Has a Pair, and the Board Has a Pair (No Two Pair)
+        # Check Two pair is True Scenario 2: Your hole_cards Has a Pair, and the Board Has a Pair.
         hole_cards = [f'2{S}', f'2{D}']
         community_cards = [f'3{D}', f'3{S}', f'8{S}', f'10{S}', f'K{S}']
         rank.update_cards_in_play(hole_cards, community_cards)
-        self.assertFalse(rank.check_Two_Pair(), "Failed Two-pair check - test 2")
+        self.assertTrue(rank.check_Two_Pair(), "Failed Two-pair check - test 2")
 
-        # Check Two pair is False: Scenario 2: Your hole_cards Has a match, and the Board Has a Pair (No Two Pair)
+        # Check Two pair is True: Scenario 3: Your hole_cards Has a match, and the Board Has a Pair.
         hole_cards = [f'8{S}', f'2{D}']
         community_cards = [f'3{D}', f'3{S}', f'8{S}', f'10{S}', f'K{S}']
         rank.update_cards_in_play(hole_cards, community_cards)
-        self.assertFalse(rank.check_Two_Pair(), "Failed Two-pair check - test 3")
+        self.assertTrue(rank.check_Two_Pair(), "Failed Two-pair check - test 3")
+
+        # Check Two pair is True: Scenario 4: Two pair in the community, nothing in the hole.
+        hole_cards = [f'8{S}', f'2{D}']
+        community_cards = [f'3{D}', f'3{S}', f'10{D}', f'10{S}', f'K{S}']
+        rank.update_cards_in_play(hole_cards, community_cards)
+        self.assertTrue(rank.check_Two_Pair(), "Failed Two-pair check - test 4")
+
+        # Check Two pair is False: Scenario 5: One pair in the community.
+        hole_cards = [f'8{S}', f'2{D}']
+        community_cards = [f'3{D}', f'4{S}', f'10{D}', f'10{S}', f'K{S}']
+        rank.update_cards_in_play(hole_cards, community_cards)
+        self.assertFalse(rank.check_Two_Pair(), "Failed Two-pair check - test 5")
+
+        # Check Two pair is False: Scenario 6: Pocket Aces only.
+        hole_cards = [f'A{S}', f'A{D}']
+        community_cards = [f'3{D}', f'4{S}', f'10{D}', f'J{S}', f'K{S}']
+        rank.update_cards_in_play(hole_cards, community_cards)
+        self.assertFalse(rank.check_Two_Pair(), "Failed Two-pair check - test 5")
 
     def test_three_of_a_kind(self):
         hole_cards = [f'3{D}', f'3{S}']
@@ -111,11 +105,11 @@ class RankerTester(unittest.TestCase):
         rank.update_cards_in_play(hole_cards, community_cards)
         self.assertTrue(rank.check_Three_of_a_Kind(), "Failed 3oaK check - test 2")
 
-        # Check 3oaK is False with 3 in the community
+        # Check 3oaK is True with 3 in the community
         hole_cards = [f'3{S}', f'3{D}']
         community_cards = [f'2{D}', f'2{C}', f'2{S}', f'10{S}', f'K{S}']
         rank.update_cards_in_play(hole_cards, community_cards)
-        self.assertFalse(rank.check_Three_of_a_Kind(), "Failed 3oaK check - test 3")
+        self.assertTrue(rank.check_Three_of_a_Kind(), "Failed 3oaK check - test 3")
 
         # Check 3oaK is False with 4oaK
         hole_cards = [f'3{S}', f'3{D}']
@@ -123,11 +117,23 @@ class RankerTester(unittest.TestCase):
         rank.update_cards_in_play(hole_cards, community_cards)
         self.assertFalse(rank.check_Three_of_a_Kind(), "Failed 3oaK check - test 4")
 
-        # Check 3oaK is False with Full house
+        # Check 3oaK is True with Full house
         hole_cards = [f'3{S}', f'3{D}']
         community_cards = [f'3{H}', f'2{C}', f'2{S}', f'10{S}', f'K{S}']
         rank.update_cards_in_play(hole_cards, community_cards)
-        self.assertFalse(rank.check_Three_of_a_Kind(), "Failed 3oaK check - test 5")
+        self.assertTrue(rank.check_Three_of_a_Kind(), "Failed 3oaK check - test 5")
+
+        # Check 3oaK is False with a pair
+        hole_cards = [f'3{S}', f'3{D}']
+        community_cards = [f'6{H}', f'2{C}', f'A{S}', f'10{S}', f'K{S}']
+        rank.update_cards_in_play(hole_cards, community_cards)
+        self.assertFalse(rank.check_Three_of_a_Kind(), "Failed 3oaK check - test 6")
+
+        # Check 3oaK is False with two pair
+        hole_cards = [f'3{S}', f'3{D}']
+        community_cards = [f'6{H}', f'2{C}', f'2{S}', f'10{S}', f'K{S}']
+        rank.update_cards_in_play(hole_cards, community_cards)
+        self.assertFalse(rank.check_Three_of_a_Kind(), "Failed 3oaK check - test 7")
 
     def test_straight(self):
         hole_cards = [f'3{D}', f'4{S}']
@@ -166,31 +172,95 @@ class RankerTester(unittest.TestCase):
         community_cards = [f'4{S}', f'5{S}', f'8{S}', f'10{S}', f'K{S}']
         rank = Rankinator(hole_cards, community_cards)
 
-        # Test to see if flush exists
-        self.assertTrue(rank.check_Flush())
+        # Test for flush exists
+        self.assertTrue(rank.check_Flush(), "Failed Flush check - test 1")
 
-        # Test to see if False when the hole_cards is different but the rest match
-        hole_cards = [f'2{H}', f'3{S}']
+        # Test for True when the hole_cards are not suited but the community contains a flush.
+        hole_cards = [f'2{H}', f'3{H}']
         rank.update_cards_in_play(hole_cards, community_cards)
-        self.assertFalse(rank.check_Flush())
+        self.assertTrue(rank.check_Flush(), "Failed Flush check - test 2")
 
-        # Test to see if True when there are just enough to make the flush
+        # Test for True when there are just enough to make the flush
         hole_cards = [f'2{S}', f'3{S}']
         community_cards = [f'4{H}', f'5{H}', f'8{S}', f'10{S}', f'K{S}']
         rank.update_cards_in_play(hole_cards, community_cards)
-        self.assertTrue(rank.check_Flush())
+        self.assertTrue(rank.check_Flush(), "Failed Flush check - test 3")
 
-        # Test to see if False when there aren't enough to make a flush
+        # Test for False when there aren't enough to make a flush
         hole_cards = [f'2{S}', f'3{S}']
         community_cards = [f'4{H}', f'5{H}', f'8{H}', f'10{S}', f'K{S}']
         rank.update_cards_in_play(hole_cards, community_cards)
-        self.assertFalse(rank.check_Flush())
+        self.assertFalse(rank.check_Flush(), "Failed Flush check - test 4")
+
+        # Test for True with single suited card from pocket.
+        hole_cards = [f'2{S}', f'3{H}']
+        community_cards = [f'4{H}', f'5{H}', f'8{H}', f'10{H}', f'K{S}']
+        rank.update_cards_in_play(hole_cards, community_cards)
+        self.assertTrue(rank.check_Flush(), "Failed Flush check - test 5")
 
     def test_check_Full_House(self):
-        pass
+        hole_cards = [f'3{D}', f'3{S}']
+        community_cards = [f'5{C}', f'5{D}', f'5{S}', f'10{S}', f'K{S}']
+        rank = Rankinator(hole_cards, community_cards)
+
+        # Check True Scenario 1: Pair in the hand, 3oaK in the community.
+        self.assertTrue(rank.check_Full_House(), "Failed Full House check - test 1")
+
+        # Check True Scenario 2: 1 of each in the hand, pair and match in the community.
+        hole_cards = [f'2{S}', f'4{D}']
+        community_cards = [f'2{D}', f'2{C}', f'4{S}', f'7{S}', f'8{S}']
+        rank.update_cards_in_play(hole_cards, community_cards)
+        self.assertTrue(rank.check_Full_House(), "Failed Full House check - test 2")
+
+        # Check True Scenario 3: Full house in the Community. Pair in the pocket.
+        hole_cards = [f'2{S}', f'2{D}']
+        community_cards = [f'3{D}', f'3{C}', f'3{S}', f'7{S}', f'7{D}']
+        rank.update_cards_in_play(hole_cards, community_cards)
+        self.assertTrue(rank.check_Full_House(), "Failed Full House check - test 3")
+
+        # Check True Scenario 4: Full house in the Community. Nothing in the pocket.
+        hole_cards = [f'2{S}', f'4{D}']
+        community_cards = [f'3{D}', f'3{C}', f'3{S}', f'7{S}', f'7{D}']
+        rank.update_cards_in_play(hole_cards, community_cards)
+        self.assertTrue(rank.check_Full_House(), "Failed Full House check - test 4")
+
+        # Check True Scenario 5: Two triples in all cards
+        hole_cards = [f'2{S}', f'2{D}']
+        community_cards = [f'2{H}', f'3{C}', f'3{S}', f'3{D}', f'7{D}']
+        rank.update_cards_in_play(hole_cards, community_cards)
+        self.assertTrue(rank.check_Full_House(), "Failed Full House check - test 5")
+
+        # Check False Scenario 1: No boat
+        hole_cards = [f'2{S}', f'4{D}']
+        community_cards = [f'3{D}', f'3{C}', f'6{S}', f'7{S}', f'7{D}']
+        rank.update_cards_in_play(hole_cards, community_cards)
+        self.assertFalse(rank.check_Full_House(), "Failed Full House check - test 6")
 
     def test_check_Four_of_a_Kind(self):
-        pass
+        hole_cards = [f'3{D}', f'3{S}']
+        community_cards = [f'3{C}', f'3{H}', f'8{S}', f'10{S}', f'K{S}']
+        rank = Rankinator(hole_cards, community_cards)
+
+        # Check 4oaK is True Scenario 1: 2 in the hole_cards, 2 in the community
+        self.assertTrue(rank.check_Four_of_a_Kind(), "Failed 4oaK check - test 1")
+
+        # Check 4oaK is True Scenario 2: 1 in the hole_cards, 3 in the community
+        hole_cards = [f'2{S}', f'3{D}']
+        community_cards = [f'2{D}', f'2{C}', f'2{H}', f'10{S}', f'K{S}']
+        rank.update_cards_in_play(hole_cards, community_cards)
+        self.assertTrue(rank.check_Four_of_a_Kind(), "Failed 4oaK check - test 2")
+
+        # Check 4oaK is True Scenario 3: 4 in the community
+        hole_cards = [f'3{S}', f'3{D}']
+        community_cards = [f'4{D}', f'4{C}', f'4{S}', f'4{H}', f'K{S}']
+        rank.update_cards_in_play(hole_cards, community_cards)
+        self.assertTrue(rank.check_Four_of_a_Kind(), "Failed 4oaK check - test 3")
+
+        # Check 4oaK is False Scenario 1: No quad
+        hole_cards = [f'3{S}', f'3{D}']
+        community_cards = [f'4{D}', f'4{C}', f'4{S}', f'3{H}', f'K{S}']
+        rank.update_cards_in_play(hole_cards, community_cards)
+        self.assertFalse(rank.check_Four_of_a_Kind(), "Failed 4oaK check - test 4")
 
     def test_check_Straight_Flush(self):
         pass
