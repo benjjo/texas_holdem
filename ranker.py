@@ -8,13 +8,14 @@ class Rankinator:
         self.hole_cards_ranks = list()
         self.hole_cards_ranks_numbered = list()  # Numbered lists are only to be utilised by straights.
         self.community_cards = list()
+        self.community_cards_ranks = list()
+        self.community_cards_ranks_numbered = list()
         self.hole_card_1 = str()
         self.hole_card_2 = str()
-        self.community_ranks = list()
         self.all_cards = list()
         self.all_cards_ranks = list()
         self.all_cards_ranks_numbered = list()  # Numbered lists are only to be utilised by straights.
-        self.update_cards_in_play(hole_cards, community_cards)
+        # self.update_cards_in_play(hole_cards, community_cards)
 
     # Setters and getters
     def set_hole_cards(self, hole_cards_list: list):
@@ -36,7 +37,7 @@ class Rankinator:
         self.hole_cards_ranks = self.convert_cards_to_integers([card1, card2])
 
     def set_community_cards_numbers(self, numbers: list):
-        self.community_ranks = numbers
+        self.community_cards_ranks_numbered = numbers
 
     def set_all_cards(self, hole_cards_cards: list, community_cards_cards: list):
         self.all_cards = hole_cards_cards + community_cards_cards
@@ -48,31 +49,31 @@ class Rankinator:
         [self.all_cards_ranks.append(s[0:-1]) for s in all_cards]
 
     def set_all_cards_as_numbers(self):
-        stripped_community_cards = self.strip_suit(self.community_cards)
-        self.set_community_cards_numbers(self.convert_cards_to_integers(stripped_community_cards))
         self.all_cards_ranks_numbered = self.convert_cards_to_integers(self.all_cards_ranks)
 
     # Work functions
     def strip_suit(self, card_list: list) -> list:
-        stripped_cards = list()
-        [stripped_cards.append(s[0:-1]) for s in card_list]
-        return stripped_cards
+        suits = [f'{H}', f'{D}', f'{S}', f'{C}']
+        stripped_cards = [''.join(c for c in s if c not in suits) for s in card_list]
+        return stripped_cards if stripped_cards else card_list
 
     def filter_cards_by_suit(self, card_list: list, suit: str) -> list:
-        return [card for card in card_list if card[-1] == suit]
+        # Returns a list of cards with the selected suit
+        suited_cards = [card for card in card_list if card[-1] == suit]
+        return suited_cards
 
-    def convert_cards_to_integers(self, cards: list):
+    def convert_cards_to_integers(self, cards_list: list):
         # cards must be a list that has been stripped of the suit.
         # Converts the all_card_values to integers.
         # Ace is duplicated to 1 and 14.
         # Sorts the list and returns a set.
-        cards = ['11' if item == 'J' else item for item in cards]
-        cards = ['12' if item == 'Q' else item for item in cards]
-        cards = ['13' if item == 'K' else item for item in cards]
-        cards = ['14' if item == 'A' else item for item in cards]
-        if '14' in cards:
-            cards = cards + ['1']
-        int_list = [int(x) for x in cards]
+        cards_list = ['10' if item == 'T' else item for item in cards_list]
+        cards_list = ['11' if item == 'J' else item for item in cards_list]
+        cards_list = ['12' if item == 'Q' else item for item in cards_list]
+        cards_list = ['13' if item == 'K' else item for item in cards_list]
+        cards_list = ['14' if item == 'A' else item for item in cards_list]
+        cards_list = cards_list + ['1'] if '14' in cards_list else cards_list
+        int_list = [int(x) for x in cards_list]
         int_list.sort()
         return list(int_list)
 
@@ -86,67 +87,70 @@ class Rankinator:
         self.set_all_cards_as_numbers()
 
     # hole_cards evaluators
-    def check_Royal_Flush(self):
+    def check_Royal_Flush(self, cards_list: list) -> bool:
         for suit in [H, D, C, S]:
-            flush_deck = self.filter_cards_by_suit(self.all_cards, suit)
+            flush_deck = self.filter_cards_by_suit(cards_list, suit)
             if len(flush_deck) >= 5:
-                return all(card for card in flush_deck if card in
-                           [f'10{suit}', f'J{suit}', f'Q{suit}', f'K{suit}', f'A{suit}'])
+                return all(card in flush_deck for card in [f'T{suit}', f'J{suit}', f'Q{suit}', f'K{suit}', f'A{suit}'])
         return False
 
-    def check_Straight_Flush(self):
-        return self.check_Straight() and self.check_Flush()
+    def check_Straight_Flush(self, cards_list: list) -> bool:
+        for suit in [H, D, C, S]:
+            flush_deck = self.filter_cards_by_suit(cards_list, suit)
+            if len(flush_deck) >= 5:
+                return self.check_Straight(card_list=flush_deck)
 
-    def check_Four_of_a_Kind(self):
-        count = Counter(self.all_cards_ranks)
+    def check_Four_of_a_Kind(self, cards_list: list) -> bool:
+        cards_list = self.strip_suit(card_list=cards_list)
+        count = Counter(cards_list)
         quads = [item for item, count in count.items() if count == 4]
         return bool(quads)
 
-    def check_Full_House(self):
-        count = Counter(self.all_cards_ranks)
+    def check_Full_House(self, cards_list: list) -> bool:
+        cards_list = self.strip_suit(card_list=cards_list)
+        count = Counter(cards_list)
         pairs = [item for item, count in count.items() if count == 2]
         triples = [item for item, count in count.items() if count == 3]
-        pairs = True if len(triples) > 1 else pairs
+        pairs = triples if len(triples) > 1 else pairs
         return bool(pairs and triples)
 
-    def check_Flush(self, card_count=5, cards = None):
-        cards = cards if cards else self.all_cards
-        community_cards_suits = list()
-        [community_cards_suits.append(s[-1]) for s in cards]
-        count = Counter(community_cards_suits)
-        suited = [item for item, count in count.items() if count >= card_count]
+    def check_Flush(self, cards_list: list) -> bool:
+        suits_list = list()
+        [suits_list.append(s[-1]) for s in cards_list]
+        count = Counter(suits_list)
+        suited = [item for item, count in count.items() if count >= 5]
         return bool(suited)
 
-    def check_Straight(self, length=5):
-        sorted_lst = list(set(self.all_cards_ranks_numbered))
-        # Check if there is a sequence of 5 consecutive numbers
-        for i in range(len(sorted_lst)):
-            straight = sorted_lst[i:i + length]
-            # Need to account for the duplication of Ace
-            # Here we decide if we can remove one of the numbers
-            if (1 in self.hole_cards_ranks_numbered) and (14 in self.hole_cards_ranks_numbered):
-                if all(num in self.all_cards_ranks_numbered for num in [2, 3, 4, 5]):
-                    self.all_cards_ranks_numbered.remove(14)
-                    self.hole_cards_ranks_numbered.remove(14)
-                else:
-                    self.all_cards_ranks_numbered.remove(1)
-                    self.hole_cards_ranks_numbered.remove(1)
-            # Check if both hole cards are part of the straight
-            if all(straight[j] == straight[0] + j for j in range(len(straight))):
-                # Now that we have matched a sequence, check if the hole cards are in the sequence
-                if all(num in straight for num in self.hole_cards_ranks_numbered):
-                    return True  # Found a straight with both hole cards
-        return False  # No straight with both hole cards
+    def check_Straight(self, card_list: list) -> bool:
+        # Extract ranks and convert them to numeric values
+        possible_ranks = self.strip_suit(card_list=card_list)
+        possible_ranks = self.convert_cards_to_integers(possible_ranks)
+        # Remove duplicates and sort the ranks as integers
+        sorted_ranks = sorted(set(possible_ranks))
 
-    def check_Three_of_a_Kind(self):
-        count = Counter(self.all_cards_ranks)
+        # Check for 5 consecutive numbers
+        for i in range(len(sorted_ranks) - 4):
+            if all(sorted_ranks[i + j] == sorted_ranks[i] + j for j in range(5)):
+                return True
+        return False
+
+    def check_Three_of_a_Kind(self, cards_list: list) -> bool:
+        # Creates a list with the triples. Checks list for length more than 0
+        cards_list = self.strip_suit(card_list=cards_list)
+        count = Counter(cards_list)
         triples = [item for item, count in count.items() if count == 3]
         return bool(triples)
 
-    def check_Two_Pair(self) -> bool:
-        count = Counter(self.all_cards_ranks)
-        pairs = [item for item, count in count.items() if count == 2]
-        return len(pairs) == 2
+    def check_Two_Pair(self, cards_list: list) -> bool:
+        # Creates a list with the pairs. Checks list for length of 2 or better.3
+        cards_list = self.strip_suit(card_list=cards_list)
+        count = Counter(cards_list)
+        two_pairs = [item for item, count in count.items() if count == 2]
+        return len(two_pairs) >= 2
 
-    def check_One_Pair(self) -> bool:
-        return len(self.all_cards_ranks) > len(set(self.all_cards_ranks))
+    def check_One_Pair(self, cards_list: list) -> bool:
+        # Creates a list with the pairs. Checks list for length of 1
+        cards_list = self.strip_suit(card_list=cards_list)
+        count = Counter(cards_list)
+        one_pair = [item for item, count in count.items() if count == 2]
+        return len(one_pair) == 1
