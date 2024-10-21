@@ -264,7 +264,7 @@ class RankerTester(unittest.TestCase):
         self.assertTrue(rank.best_hand == 'Royal Flush', "Failed return_highest_hand - test 1.2")
 
         # Test True: Straight flush in hand
-        cards_list = [f'2{H}', f'3{H}', f'4{H}', f'5{H}', f'6{H}', f'9{S}', f'2{S}']
+        cards_list = [f'5{H}', f'4{H}', f'6{H}', f'7{H}', f'8{H}', f'9{S}', f'2{S}']
         self.assertTrue(rank.return_highest_hand(cards_list), "Failed return_highest_hand - test 2.1")
         self.assertTrue(rank.best_hand == 'Straight Flush', "Failed return_highest_hand - test 2.2")
 
