@@ -40,15 +40,15 @@ class RankerTester(unittest.TestCase):
         cards = [f'2{H}', f'5{D}', f'8{S}', f'T{C}', f'K{S}']
 
         # Test True: suits are stripped
-        self.assertEqual(rank.strip_suit(card_list=cards), ['2', '5', '8', 'T', 'K'], "Failed strip_suit - Test 1")
+        self.assertListEqual(rank.strip_suit(card_list=cards), ['2', '5', '8', 'T', 'K'], "Failed strip_suit - Test 1")
 
         # Test True: there is no change
         cards = ['2', '5', '8', 'T', 'K']
-        self.assertEqual(rank.strip_suit(card_list=cards), ['2', '5', '8', 'T', 'K'], "Failed strip_suit - Test 2")
+        self.assertListEqual(rank.strip_suit(card_list=cards), ['2', '5', '8', 'T', 'K'], "Failed strip_suit - Test 2")
 
         # Test True: Triples are stripped
         cards = [f'2{H}', f'2{D}', f'2{S}', f'2{C}', f'K{S}']
-        self.assertEqual(rank.strip_suit(card_list=cards), ['2', '2', '2', '2', 'K'], "Failed strip_suit - Test 1")
+        self.assertListEqual(rank.strip_suit(card_list=cards), ['2', '2', '2', '2', 'K'], "Failed strip_suit - Test 1")
 
     def test_filter_cards_by_suit(self):
         rank = Rankinator([], [])

@@ -17,5 +17,3 @@ def shuffle_deck():
     burner_deck = DECK.copy()
     random.shuffle(burner_deck)
     return burner_deck
-
-

@@ -62,7 +62,7 @@ class Rankinator:
         suited_cards = [card for card in card_list if card[-1] == suit]
         return suited_cards
 
-    def convert_cards_to_integers(self, cards_list: list):
+    def convert_cards_to_integers(self, cards_list: list) -> list:
         # cards must be a list that has been stripped of the suit.
         # Converts the all_card_values to integers.
         # Ace is duplicated to 1 and 14.
