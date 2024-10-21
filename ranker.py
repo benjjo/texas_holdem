@@ -143,7 +143,7 @@ class Rankinator:
                      self.Three_of_a_Kind,
                      self.Two_Pair,
                      self.One_Pair]
-        print(card_list)
+
         for func in functions:
             if func(card_list):  # Call each function and check if it returns True
                 self.set_best_hand(func.__name__)
