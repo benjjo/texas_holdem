@@ -95,7 +95,7 @@ class RankerTester(unittest.TestCase):
                          cards_out, "Failed convert_cards_to_integers - Test 2")
         # Test True: No picture cards
         cards_in = ['A', 'A', 'A']
-        cards_out = [1, 14, 14, 14]
+        cards_out = [1, 14]
         self.assertEqual(rank.convert_cards_to_integers(cards_in),
                          cards_out, "Failed convert_cards_to_integers - Test 3")
 

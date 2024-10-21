@@ -64,9 +64,8 @@ class Rankinator:
 
     def convert_cards_to_integers(self, cards_list: list) -> list:
         # cards must be a list that has been stripped of the suit.
-        # Converts the all_card_values to integers.
         # Ace is duplicated to 1 and 14.
-        # Sorts the list and returns a set.
+        # Returns a unique sorted integer list
         cards_list = ['10' if item == 'T' else item for item in cards_list]
         cards_list = ['11' if item == 'J' else item for item in cards_list]
         cards_list = ['12' if item == 'Q' else item for item in cards_list]
@@ -75,7 +74,7 @@ class Rankinator:
         cards_list = cards_list + ['1'] if '14' in cards_list else cards_list
         int_list = [int(x) for x in cards_list]
         int_list.sort()
-        return list(int_list)
+        return list(set(int_list))
 
     def update_cards_in_play(self, hole_cards: list, community_cards: list):
         self.set_hole_cards(hole_cards)
