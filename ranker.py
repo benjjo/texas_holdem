@@ -61,30 +61,26 @@ class Rankinator:
         return list(set(int_list))
 
     # hole_cards evaluators
-    def check_Royal_Flush(self, cards_list: list) -> bool:
-        self.set_best_hand('Royal Flush')
+    def Royal_Flush(self, cards_list: list) -> bool:
         for suit in [H, D, C, S]:
             flush_deck = self.filter_cards_by_suit(cards_list, suit)
             if len(flush_deck) >= 5:
                 return all(card in flush_deck for card in [f'T{suit}', f'J{suit}', f'Q{suit}', f'K{suit}', f'A{suit}'])
         return False
 
-    def check_Straight_Flush(self, cards_list: list) -> bool:
-        self.set_best_hand('Straight Flush')
+    def Straight_Flush(self, cards_list: list) -> bool:
         for suit in [H, D, C, S]:
             flush_deck = self.filter_cards_by_suit(cards_list, suit)
             if len(flush_deck) >= 5:
-                return self.check_Straight(card_list=flush_deck)
+                return self.Straight(card_list=flush_deck)
 
-    def check_Four_of_a_Kind(self, cards_list: list) -> bool:
-        self.set_best_hand('Four of a kind')
+    def Four_of_a_Kind(self, cards_list: list) -> bool:
         cards_list = self.strip_suit(card_list=cards_list)
         count = Counter(cards_list)
         quads = [item for item, count in count.items() if count == 4]
         return bool(quads)
 
-    def check_Full_House(self, cards_list: list) -> bool:
-        self.set_best_hand('Full house')
+    def Full_House(self, cards_list: list) -> bool:
         cards_list = self.strip_suit(card_list=cards_list)
         count = Counter(cards_list)
         pairs = [item for item, count in count.items() if count == 2]
@@ -92,16 +88,14 @@ class Rankinator:
         pairs = triples if len(triples) > 1 else pairs
         return bool(pairs and triples)
 
-    def check_Flush(self, cards_list: list) -> bool:
-        self.set_best_hand('Flush')
+    def Flush(self, cards_list: list) -> bool:
         suits_list = list()
         [suits_list.append(s[-1]) for s in cards_list]
         count = Counter(suits_list)
         suited = [item for item, count in count.items() if count >= 5]
         return bool(suited)
 
-    def check_Straight(self, card_list: list) -> bool:
-        self.set_best_hand('Straight')
+    def Straight(self, card_list: list) -> bool:
         # Extract ranks and convert them to numeric values
         possible_ranks = self.strip_suit(card_list=card_list)
         possible_ranks = self.convert_cards_to_integers(possible_ranks)
@@ -114,47 +108,44 @@ class Rankinator:
                 return True
         return False
 
-    def check_Three_of_a_Kind(self, cards_list: list) -> bool:
-        self.set_best_hand('Three of a kind')
+    def Three_of_a_Kind(self, cards_list: list) -> bool:
         # Creates a list with the triples. Checks list for length more than 0
         cards_list = self.strip_suit(card_list=cards_list)
         count = Counter(cards_list)
         triples = [item for item, count in count.items() if count == 3]
         return bool(triples)
 
-    def check_Two_Pair(self, cards_list: list) -> bool:
-        self.set_best_hand('Two Pair')
+    def Two_Pair(self, cards_list: list) -> bool:
         # Creates a list with the pairs. Checks list for length of 2 or better.3
         cards_list = self.strip_suit(card_list=cards_list)
         count = Counter(cards_list)
         two_pairs = [item for item, count in count.items() if count == 2]
         return len(two_pairs) >= 2
 
-    def check_One_Pair(self, cards_list: list) -> bool:
-        self.set_best_hand('One Pair')
+    def One_Pair(self, cards_list: list) -> bool:
         # Creates a list with the pairs. Checks list for length of 1
         cards_list = self.strip_suit(card_list=cards_list)
         count = Counter(cards_list)
         one_pair = [item for item, count in count.items() if count == 2]
         return len(one_pair) == 1
 
-    def check_highest_card(self, card_list: list) -> str:
+    def Kicker(self, card_list: list) -> str:
         pass
 
     # Return the hand type
     def return_highest_hand(self, card_list: list):
-        functions = [self.check_Royal_Flush,
-                     self.check_Straight_Flush,
-                     self.check_Four_of_a_Kind,
-                     self.check_Full_House,
-                     self.check_Flush,
-                     self.check_Straight,
-                     self.check_Three_of_a_Kind,
-                     self.check_Two_Pair,
-                     self.check_One_Pair]
-
+        functions = [self.Royal_Flush,
+                     self.Straight_Flush,
+                     self.Four_of_a_Kind,
+                     self.Full_House,
+                     self.Flush,
+                     self.Straight,
+                     self.Three_of_a_Kind,
+                     self.Two_Pair,
+                     self.One_Pair]
+        print(card_list)
         for func in functions:
             if func(card_list):  # Call each function and check if it returns True
+                self.set_best_hand(func.__name__)
                 return True
         return False  # Default return if none return True
-
