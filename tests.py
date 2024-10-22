@@ -343,6 +343,22 @@ class RankerTester(unittest.TestCase):
         win_tup = [f'A', f'K']
         self.assertTrue(bookmaker.get_winning_percentage(win_tup) == 68, 'Failed get_winning_percentage - test 2')
 
+        # Test True: 2 -> A will yield 57
+        win_tup = [f'2', f'A']
+        self.assertTrue(bookmaker.get_winning_percentage(win_tup) == 57, 'Failed get_winning_percentage - test 3')
+
+        # Test True: A -> 2 will yield 59
+        win_tup = [f'A', f'2']
+        self.assertTrue(bookmaker.get_winning_percentage(win_tup) == 59, 'Failed get_winning_percentage - test 4')
+
+        # Test True: 2 -> 2 will yield 51
+        win_tup = [f'2', f'2']
+        self.assertTrue(bookmaker.get_winning_percentage(win_tup) == 51, 'Failed get_winning_percentage - test 5')
+
+        # Test True: A -> A will yield 85
+        win_tup = [f'A', f'A']
+        self.assertTrue(bookmaker.get_winning_percentage(win_tup) == 85, 'Failed get_winning_percentage - test 6')
+
 
 # Run tests:
 if __name__ == '__main__':
