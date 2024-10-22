@@ -3,13 +3,13 @@ from deck import *
 
 
 class Rankinator:
-    def __init__(self, hole_cards: list, community_cards: list):
+    def __init__(self):
         self.hole_cards = list()
         self.community_cards = list()
         self.all_cards = list()
         self.all_cards_ranked = list()
         self.best_hand = str()
-        # self.update_cards_in_play(hole_cards, community_cards)
+        self.best_hand_ranked = int()
 
     # Setters and getters
     def set_hole_cards(self, cards_list: list) -> None:
@@ -25,6 +25,9 @@ class Rankinator:
         self.all_cards_ranked = cards_list
 
     def set_best_hand(self, hand: str) -> None:
+        self.best_hand = hand
+
+    def set_best_hand_ranked(self, hand: str) -> None:
         self.best_hand = hand
 
     def update_cards_in_play(self, hole_cards: list, community_cards: list) -> None:
@@ -129,11 +132,15 @@ class Rankinator:
         one_pair = [item for item, count in count.items() if count == 2]
         return len(one_pair) == 1
 
-    def Kicker(self, card_list: list) -> str:
-        pass
+    def Kicker(self, hole_cards: list) -> bool:
+        high_hole_card = self.convert_cards_to_integers(self.strip_suit(hole_cards))
+        self.set_best_hand(RANKS[max(high_hole_card)])
+        return False
 
     # Return the hand type
-    def return_highest_hand(self, card_list: list):
+    def return_highest_hand(self, card_list: list, hole_cards=None) -> bool:
+        # Sets the name of the first hand matched in the list.
+        hole_cards = card_list[0:2] if not hole_cards else hole_cards
         functions = [self.Royal_Flush,
                      self.Straight_Flush,
                      self.Four_of_a_Kind,
@@ -148,4 +155,6 @@ class Rankinator:
             if func(card_list):  # Call each function and check if it returns True
                 self.set_best_hand(func.__name__)
                 return True
+        print(hole_cards)
+        self.Kicker(hole_cards)
         return False  # Default return if none return True

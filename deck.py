@@ -12,6 +12,11 @@ DECK = [
     f'2{D}',f'3{D}',f'4{D}',f'5{D}',f'6{D}',f'7{D}',f'8{D}',f'9{D}',f'T{D}',f'J{D}',f'Q{D}',f'K{D}',f'A{D}',
     f'2{H}',f'3{H}',f'4{H}',f'5{H}',f'6{H}',f'7{H}',f'8{H}',f'9{H}',f'T{H}',f'J{H}',f'Q{H}',f'K{H}',f'A{H}']
 
+RANKS = {2:'Two', 3:'Three', 4:'Four', 5:'Five', 6:'Six', 7:'Seven', 8:'Eight', 9:'Nine',
+         10:'Ten', 11:'Jack', 12:'Queen', 13:'King', 14:'Ace', 15:'One_Pair', 16:'Two_Pair',
+         17:'Three_of_a_Kind', 18:'Straight', 19:'Flush', 20:'Full_House', 21:'Four_of_a_Kind',
+         22:'Straight_Flush', 23:'Royal_Flush'}
+
 
 def shuffle_deck():
     burner_deck = DECK.copy()

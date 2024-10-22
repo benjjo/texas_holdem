@@ -36,7 +36,7 @@ class RankerTester(unittest.TestCase):
         self.assertTrue(len([n for n in self.deck if n[0:-1] == 'A']) == 4)
 
     def test_strip_suit(self):
-        rank = Rankinator([], [])
+        rank = Rankinator()
         cards = [f'2{H}', f'5{D}', f'8{S}', f'T{C}', f'K{S}']
 
         # Test True: suits are stripped
@@ -51,7 +51,7 @@ class RankerTester(unittest.TestCase):
         self.assertListEqual(rank.strip_suit(card_list=cards), ['2', '2', '2', '2', 'K'], "Failed strip_suit - Test 1")
 
     def test_filter_cards_by_suit(self):
-        rank = Rankinator([], [])
+        rank = Rankinator()
         cards = [f'2{D}', f'5{H}', f'8{S}', f'T{C}']
 
         # Test ListEqual: Only Hearts
@@ -81,7 +81,7 @@ class RankerTester(unittest.TestCase):
                              "Failed filter_cards_by_suit - Test 6")
 
     def test_convert_cards_to_integers(self):
-        rank = Rankinator([], [])
+        rank = Rankinator()
         cards_in = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A']
         cards_out = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
 
@@ -101,7 +101,7 @@ class RankerTester(unittest.TestCase):
 
     # Test the Ranker class
     def test_one_pair(self):
-        rank = Rankinator([], [])
+        rank = Rankinator()
         cards_list = [f'3{H}', f'3{D}', f'8{S}', f'T{S}', f'K{S}']
 
         # Test True: One pair present in list
@@ -116,7 +116,7 @@ class RankerTester(unittest.TestCase):
         self.assertFalse(rank.One_Pair(cards_list), "Failed check_One_Pair - test 3")
 
     def test_two_pair(self):
-        rank = Rankinator([], [])
+        rank = Rankinator()
         cards_list = [f'3{D}', f'3{S}', f'T{H}', f'T{S}', f'K{S}']
 
         # Test True: Two pair present in list
@@ -135,7 +135,7 @@ class RankerTester(unittest.TestCase):
         self.assertFalse(rank.Two_Pair(cards_list), "Failed check_Two_Pair - test 4")
 
     def test_three_of_a_kind(self):
-        rank = Rankinator([], [])
+        rank = Rankinator()
         cards_list = [f'2{D}', f'3{S}', f'T{H}', f'T{S}', f'T{C}']
 
         # Test True: 3oaK present in list
@@ -162,7 +162,7 @@ class RankerTester(unittest.TestCase):
         self.assertFalse(rank.Three_of_a_Kind(cards_list), "Failed check_Three_of_a_Kind - test 6")
 
     def test_straight(self):
-        rank = Rankinator([], [])
+        rank = Rankinator()
         cards_list = [f'2', f'3', f'4', f'5', f'6', f'T', f'K']
 
         # Test True: Straight exists
@@ -181,7 +181,7 @@ class RankerTester(unittest.TestCase):
         self.assertTrue(rank.Straight(cards_list), "Failed check_Straight - test 4")
 
     def test_flush(self):
-        rank = Rankinator([], [])
+        rank = Rankinator()
 
         # Test True: flush exists for Hearts
         cards_list = [f'4{H}', f'5{H}', f'8{H}', f'T{H}', f'K{H}', f'4{S}', f'5{S}']
@@ -204,7 +204,7 @@ class RankerTester(unittest.TestCase):
         self.assertFalse(rank.Flush(cards_list), "Failed check_Flush - test 5")
 
     def test_check_Full_House(self):
-        rank = Rankinator([], [])
+        rank = Rankinator()
 
         # Test True: Boat exists
         cards_list = [f'4{H}', f'4{D}', f'4{C}', f'T{H}', f'T{D}', f'9{S}', f'2{S}']
@@ -219,7 +219,7 @@ class RankerTester(unittest.TestCase):
         self.assertTrue(rank.Full_House(cards_list), "Failed check_Full_House - test 3")
 
     def test_check_Four_of_a_Kind(self):
-        rank = Rankinator([], [])
+        rank = Rankinator()
 
         # Test True: Four of a kind exists
         cards_list = [f'4{H}', f'4{D}', f'4{C}', f'4{S}', f'T{D}', f'9{S}', f'2{S}']
@@ -234,7 +234,7 @@ class RankerTester(unittest.TestCase):
         self.assertTrue(rank.Four_of_a_Kind(cards_list), "Failed check_Four_of_a_Kind - test 3")
 
     def test_check_Straight_Flush(self):
-        rank = Rankinator([], [])
+        rank = Rankinator()
 
         # Test True: Straight flush in hand
         cards_list = [f'5{H}', f'4{H}', f'6{H}', f'7{H}', f'8{H}', f'9{S}', f'2{S}']
@@ -245,7 +245,7 @@ class RankerTester(unittest.TestCase):
         self.assertFalse(rank.Straight_Flush(cards_list), "Failed check_Straight_Flush - test 2")
 
     def test_check_Royal_Flush(self):
-        rank = Rankinator([], [])
+        rank = Rankinator()
 
         # Test True: Straight flush in hand
         cards_list = [f'A{H}', f'K{H}', f'Q{H}', f'J{H}', f'T{H}', f'9{S}', f'2{S}']
@@ -256,7 +256,7 @@ class RankerTester(unittest.TestCase):
         self.assertFalse(rank.Royal_Flush(cards_list), "Failed check_Royal_Flush - test 2")
 
     def test_return_highest_hand(self):
-        rank = Rankinator([], [])
+        rank = Rankinator()
 
         # Test True: Royal flush in hand
         cards_list = [f'A{H}', f'K{H}', f'Q{H}', f'J{H}', f'T{H}', f'9{S}', f'2{S}']
@@ -302,6 +302,34 @@ class RankerTester(unittest.TestCase):
         cards_list = [f'A{H}', f'A{D}', f'4{S}', f'J{H}', f'7{H}', f'9{S}', f'2{S}']
         self.assertTrue(rank.return_highest_hand(cards_list), "Failed return_highest_hand - test 7.1")
         self.assertTrue(rank.best_hand == 'One_Pair', "Failed return_highest_hand - test 7.2")
+
+        # Test False: Kicker card and False hand match
+        cards_list = [f'Q{H}', f'A{D}', f'J{S}', f'9{H}', f'7{H}', f'5{S}', f'2{S}']
+        self.assertFalse(rank.return_highest_hand(cards_list), "Failed return_highest_hand - test 8.1")
+        self.assertTrue(rank.best_hand == 'Ace', "Failed return_highest_hand - test 8.2")
+
+    def test_Kicker(self):
+        rank = Rankinator()
+
+        # Test False: King and Ace in hand
+        hole_cards = [f'K{H}', f'A{H}']
+        self.assertFalse(rank.Kicker(hole_cards), "Failed Kicker - test 1.1")
+        self.assertTrue(rank.best_hand == 'Ace', "Failed Kicker - test 1.2")
+
+        # Test True: best_hand set to Ace
+        hole_cards = [f'A{H}', f'K{H}']
+        rank.Kicker(hole_cards)
+        self.assertTrue(rank.best_hand == 'Ace', "Failed Kicker - test 2")
+
+        # Test True: best_hand set to 3
+        hole_cards = [f'3{H}', f'2{H}']
+        rank.Kicker(hole_cards)
+        self.assertTrue(rank.best_hand == 'Three', "Failed Kicker - test 3")
+
+        # Test True: best_hand set to T
+        hole_cards = [f'9{H}', f'T{H}']
+        rank.Kicker(hole_cards)
+        self.assertTrue(rank.best_hand == 'Ten', "Failed Kicker - test 4")
 
 
 # Run tests:
