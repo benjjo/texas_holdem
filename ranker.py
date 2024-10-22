@@ -9,7 +9,6 @@ class Rankinator:
         self.all_cards = list()
         self.all_cards_ranked = list()
         self.best_hand = str()
-        self.best_hand_ranked = int()
 
     # Setters and getters
     def set_hole_cards(self, cards_list: list) -> None:
@@ -155,6 +154,6 @@ class Rankinator:
             if func(card_list):  # Call each function and check if it returns True
                 self.set_best_hand(func.__name__)
                 return True
-        print(hole_cards)
+
         self.Kicker(hole_cards)
         return False  # Default return if none return True
