@@ -260,52 +260,52 @@ class RankerTester(unittest.TestCase):
 
         # Test True: Royal flush in hand
         cards_list = [f'A{H}', f'K{H}', f'Q{H}', f'J{H}', f'T{H}', f'9{S}', f'2{S}']
-        self.assertTrue(rank.return_highest_hand(cards_list), "Failed return_highest_hand - test 1.1")
-        self.assertTrue(rank.best_hand == 'Royal_Flush', "Failed return_highest_hand - test 1.2")
+        self.assertTrue(rank.determine_highest_hand(cards_list), "Failed return_highest_hand - test 1.1")
+        self.assertTrue(rank.best_hand == 'Royal Flush', "Failed return_highest_hand - test 1.2")
 
         # Test True: Straight flush in hand
         cards_list = [f'5{H}', f'4{H}', f'6{H}', f'7{H}', f'8{H}', f'9{S}', f'2{S}']
-        self.assertTrue(rank.return_highest_hand(cards_list), "Failed return_highest_hand - test 2.1")
-        self.assertTrue(rank.best_hand == 'Straight_Flush', "Failed return_highest_hand - test 2.2")
+        self.assertTrue(rank.determine_highest_hand(cards_list), "Failed return_highest_hand - test 2.1")
+        self.assertTrue(rank.best_hand == 'Straight Flush', "Failed return_highest_hand - test 2.2")
 
         # Test True: Four of a kind in hand
         cards_list = [f'A{H}', f'A{D}', f'A{S}', f'A{C}', f'T{H}', f'9{S}', f'2{S}']
-        self.assertTrue(rank.return_highest_hand(cards_list), "Failed return_highest_hand - test 3.1")
-        self.assertTrue(rank.best_hand == 'Four_of_a_Kind', "Failed return_highest_hand - test 3.2")
+        self.assertTrue(rank.determine_highest_hand(cards_list), "Failed return_highest_hand - test 3.1")
+        self.assertTrue(rank.best_hand == 'Four of a Kind', "Failed return_highest_hand - test 3.2")
 
         # Test True: full house in hand
         cards_list = [f'A{H}', f'A{D}', f'A{S}', f'T{D}', f'T{H}', f'9{S}', f'2{S}']
-        self.assertTrue(rank.return_highest_hand(cards_list), "Failed return_highest_hand - test 4.1")
-        self.assertTrue(rank.best_hand == 'Full_House', "Failed return_highest_hand - test 4.2")
+        self.assertTrue(rank.determine_highest_hand(cards_list), "Failed return_highest_hand - test 4.1")
+        self.assertTrue(rank.best_hand == 'Full House', "Failed return_highest_hand - test 4.2")
 
         # Test True: flush in hand
         cards_list = [f'A{H}', f'9{H}', f'2{H}', f'J{H}', f'T{H}', f'9{S}', f'2{S}']
-        self.assertTrue(rank.return_highest_hand(cards_list), "Failed return_highest_hand - test 5.1")
+        self.assertTrue(rank.determine_highest_hand(cards_list), "Failed return_highest_hand - test 5.1")
         self.assertTrue(rank.best_hand == 'Flush', "Failed return_highest_hand - test 5.2")
 
         # Test True: Straight in hand
         cards_list = [f'3{D}', f'4{C}', f'5{H}', f'6{H}', f'7{H}', f'8{S}', f'2{S}']
-        self.assertTrue(rank.return_highest_hand(cards_list), "Failed return_highest_hand - test 6.1")
+        self.assertTrue(rank.determine_highest_hand(cards_list), "Failed return_highest_hand - test 6.1")
         self.assertTrue(rank.best_hand == 'Straight', "Failed return_highest_hand - test 6.2")
 
         # Test True: Three of a kind in hand
         cards_list = [f'A{H}', f'A{D}', f'A{S}', f'J{H}', f'T{H}', f'9{S}', f'2{S}']
-        self.assertTrue(rank.return_highest_hand(cards_list), "Failed return_highest_hand - test 7.1")
-        self.assertTrue(rank.best_hand == 'Three_of_a_Kind', "Failed return_highest_hand - test 7.2")
+        self.assertTrue(rank.determine_highest_hand(cards_list), "Failed return_highest_hand - test 7.1")
+        self.assertTrue(rank.best_hand == 'Three of a Kind', "Failed return_highest_hand - test 7.2")
 
         # Test True: Two Pair in hand
         cards_list = [f'A{H}', f'A{D}', f'J{S}', f'J{H}', f'T{H}', f'9{S}', f'2{S}']
-        self.assertTrue(rank.return_highest_hand(cards_list), "Failed return_highest_hand - test 7.1")
-        self.assertTrue(rank.best_hand == 'Two_Pair', "Failed return_highest_hand - test 7.2")
+        self.assertTrue(rank.determine_highest_hand(cards_list), "Failed return_highest_hand - test 7.1")
+        self.assertTrue(rank.best_hand == 'Two Pair', "Failed return_highest_hand - test 7.2")
 
         # Test True: Three of a kind in hand
         cards_list = [f'A{H}', f'A{D}', f'4{S}', f'J{H}', f'7{H}', f'9{S}', f'2{S}']
-        self.assertTrue(rank.return_highest_hand(cards_list), "Failed return_highest_hand - test 7.1")
-        self.assertTrue(rank.best_hand == 'One_Pair', "Failed return_highest_hand - test 7.2")
+        self.assertTrue(rank.determine_highest_hand(cards_list), "Failed return_highest_hand - test 7.1")
+        self.assertTrue(rank.best_hand == 'One Pair', "Failed return_highest_hand - test 7.2")
 
         # Test False: Kicker card and False hand match
         cards_list = [f'Q{H}', f'A{D}', f'J{S}', f'9{H}', f'7{H}', f'5{S}', f'2{S}']
-        self.assertFalse(rank.return_highest_hand(cards_list), "Failed return_highest_hand - test 8.1")
+        self.assertFalse(rank.determine_highest_hand(cards_list), "Failed return_highest_hand - test 8.1")
         self.assertTrue(rank.best_hand == 'Ace', "Failed return_highest_hand - test 8.2")
 
     def test_Kicker(self):

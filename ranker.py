@@ -4,11 +4,34 @@ from deck import *
 
 class Rankinator:
     def __init__(self):
+        """
+        Rankinator is a list of tools that are used to calculate the best hand that a
+        player holds. It all comes down to determine_highest_hand().
+
+        Parameters
+        ----------
+        self.hole_cards : list
+            Cards held by player
+        self.community_cards :  list
+            The cards shared by all players
+        self.all_cards : list
+            Individual to each player. hole cards and community cards
+        self.all_cards_ranked :  list
+            A list of the integer ranks of all cards.
+        self.best_hand : string
+            The name of the best hand that the player holds
+        self.best_hand_rank :  integer
+            Used to compare two hands by the Adjudicator class
+        self.kicker_rank :  integer
+            The rank of the kicker card held by the player
+        """
         self.hole_cards = list()
         self.community_cards = list()
         self.all_cards = list()
         self.all_cards_ranked = list()
-        self.best_hand = str()
+        self.best_hand = str()  # Used
+        self.best_hand_rank = int()  #
+        self.kicker_rank = int()  # Used to determine tie-break
 
     # Setters and getters
     def set_hole_cards(self, cards_list: list) -> None:
@@ -26,8 +49,8 @@ class Rankinator:
     def set_best_hand(self, hand: str) -> None:
         self.best_hand = hand
 
-    def set_best_hand_ranked(self, hand: str) -> None:
-        self.best_hand = hand
+    def set_kicker_rank(self, cards: list) -> None:
+        self.kicker_rank = max(cards)
 
     def update_cards_in_play(self, hole_cards: list, community_cards: list) -> None:
         self.set_hole_cards(hole_cards)
@@ -36,6 +59,7 @@ class Rankinator:
 
     # Work functions
     def strip_suit(self, card_list: list) -> list:
+        # Return a list of cards with the suit removed.
         suits = [f'{H}', f'{D}', f'{S}', f'{C}']
         stripped_cards = [''.join(c for c in s if c not in suits) for s in card_list]
         return stripped_cards if stripped_cards else card_list
@@ -137,7 +161,7 @@ class Rankinator:
         return False
 
     # Return the hand type
-    def return_highest_hand(self, card_list: list, hole_cards=None) -> bool:
+    def determine_highest_hand(self, card_list: list, hole_cards=None) -> bool:
         # Sets the name of the first hand matched in the list.
         hole_cards = card_list[0:2] if not hole_cards else hole_cards
         functions = [self.Royal_Flush,
@@ -152,7 +176,7 @@ class Rankinator:
 
         for func in functions:
             if func(card_list):  # Call each function and check if it returns True
-                self.set_best_hand(func.__name__)
+                self.set_best_hand(func.__name__.replace('_', " "))
                 return True
 
         self.Kicker(hole_cards)
