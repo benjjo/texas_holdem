@@ -1,5 +1,6 @@
 from ranker import *
 from deck import *
+from bookie import *
 import unittest
 
 
@@ -330,6 +331,17 @@ class RankerTester(unittest.TestCase):
         hole_cards = [f'9{H}', f'T{H}']
         rank.Kicker(hole_cards)
         self.assertTrue(rank.best_hand == 'Ten', "Failed Kicker - test 4")
+
+    def test_get_winning_percentage(self):
+        bookmaker = Bookie()
+
+        # Test True: K -> A will yield 66
+        win_tup = [f'K', f'A']
+        self.assertTrue(bookmaker.get_winning_percentage(win_tup) == 66, 'Failed get_winning_percentage - test 1')
+
+        # Test True: A -> K will yield 68
+        win_tup = [f'A', f'K']
+        self.assertTrue(bookmaker.get_winning_percentage(win_tup) == 68, 'Failed get_winning_percentage - test 2')
 
 
 # Run tests:
