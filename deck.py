@@ -1,5 +1,3 @@
-import random
-
 # Unicode characters for card suits
 H = "\u2665"  # Hearts
 D = "\u2666"  # Diamonds
