@@ -3,6 +3,22 @@ from deck import *
 
 
 class Player(Rankinator):
+    """
+        Player determines and records the best hand that the player has.
+
+        Parameters
+        ----------
+        self.best_hand_and_kicker : tuple
+            Stores the hand and the kicker; ['A♥', 'K♥', 'Q♥', 'J♥', 'T♥'], 'A♥'
+        self.hole_cards : list()
+            Stores the hole cards; ['A♥', 'K♥']
+        self.all_cards : dict()
+            Holds the hole cards and the community cards and their respective ranks;
+            {'K♥': 13, 'Q♥': 12, 'J♥': 11, 'T♥': 10, '9♠': 9, '2♠': 2, 'T♠': 10}
+        self.best_hand_name = str()
+            Holds the name of the best hand; 'Royal Flush'
+
+    """
     def __init__(self):
         super().__init__()
         self.best_hand_and_kicker = tuple()
@@ -38,8 +54,8 @@ class Player(Rankinator):
         card = RANKS_MAP[rank]
         self.set_best_hand_and_kicker([card, rank])
 
-    def get_best_hand_cards(self) -> tuple:
-        return self.best_hand_and_kicker
+    def get_best_hand_cards(self) -> list:
+        return self.best_hand_and_kicker[0]
 
     # Return the hand type
     def determine_highest_hand(self, card_list: list, hole_cards=None) -> None:

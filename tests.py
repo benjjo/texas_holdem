@@ -365,23 +365,27 @@ class RankerTester(unittest.TestCase):
         hole_cards: list[str] = [f'K{H}', f'Q{H}']
         community_cards_list: list[str] = [f'J{H}', f'T{H}', f'9{S}', f'2{S}', f'T{S}']
         player.set_all_cards(hole_cards, community_cards_list)
-        self.assertTrue(player.all_cards.get(f'K{H}') == 13, 'Failed set_all_cards - test 1.1')
-        self.assertTrue(player.all_cards.get(f'Q{H}') == 12, 'Failed set_all_cards - test 1.2')
-        self.assertTrue(player.all_cards.get(f'J{H}') == 11, 'Failed set_all_cards - test 1.3')
-        self.assertTrue(player.all_cards.get(f'T{H}') == 10, 'Failed set_all_cards - test 1.4')
-        self.assertTrue(player.all_cards.get(f'9{S}') == 9, 'Failed set_all_cards - test 1.5')
-        self.assertTrue(player.all_cards.get(f'2{S}') == 2, 'Failed set_all_cards - test 1.6')
+        self.assertTrue(player.all_cards.get(f'K{H}') == 13, 'Failed set_all_cards - test 1')
+        self.assertTrue(player.all_cards.get(f'Q{H}') == 12, 'Failed set_all_cards - test 2')
+        self.assertTrue(player.all_cards.get(f'J{H}') == 11, 'Failed set_all_cards - test 3')
+        self.assertTrue(player.all_cards.get(f'T{H}') == 10, 'Failed set_all_cards - test 4')
+        self.assertTrue(player.all_cards.get(f'9{S}') == 9, 'Failed set_all_cards - test 5')
+        self.assertTrue(player.all_cards.get(f'2{S}') == 2, 'Failed set_all_cards - test 6')
+        # Introduce an Ace
+        hole_cards: list[str] = [f'A{H}', f'Q{H}']
+        player.set_all_cards(hole_cards, community_cards_list)
+        self.assertTrue(player.all_cards.get(f'A{H}') == 14, 'Failed set_all_cards - test 7')
 
     def test_set_best_hand_and_kicker(self):
         player = Player()
 
-        # Test True: Royal Flush returned and not the lower suited
+        # Test ListEqual: Royal Flush returned and not the lower suited
         cards_list = [f'A{H}', f'K{H}', f'Q{H}', f'J{H}', f'T{H}', f'9{H}', f'2{S}']
         hand_list = [f'A{H}', f'K{H}', f'Q{H}', f'J{H}', f'T{H}']
         player.set_best_hand_and_kicker(cards_list)
         self.assertListEqual(player.get_best_hand_cards()[0],hand_list, 'Failed set_best_hand_cards - test 1')
 
-        # Test True: Straight Flush returned and not the lower suited
+        # Test ListEqual: Straight Flush returned and not the lower suited
         cards_list = [f'T{H}', f'9{H}', f'8{H}', f'7{H}', f'6{H}', f'5{H}', f'4{S}']
         hand_list = [f'T{H}', f'9{H}', f'8{H}', f'7{H}', f'6{H}']
         player.set_best_hand_and_kicker(cards_list)
