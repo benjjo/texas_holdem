@@ -9,14 +9,14 @@ class Player(Rankinator):
         Parameters
         ----------
         self.best_hand_and_kicker : tuple
-            Stores the hand and the kicker; ['A♥', 'K♥', 'Q♥', 'J♥', 'T♥'], 'A♥'
+            Stores the hand and the kicker. eg ['A♥', 'K♥', 'Q♥', 'J♥', 'T♥'], 'A♥'
         self.hole_cards : list()
-            Stores the hole cards; ['A♥', 'K♥']
+            Stores the hole cards. eg ['A♥', 'K♥']
         self.all_cards : dict()
-            Holds the hole cards and the community cards and their respective ranks;
+            Holds the hole cards and the community cards and their respective ranks. eg
             {'K♥': 13, 'Q♥': 12, 'J♥': 11, 'T♥': 10, '9♠': 9, '2♠': 2, 'T♠': 10}
         self.best_hand_name = str()
-            Holds the name of the best hand; 'Royal Flush'
+            Holds the name of the best hand. eg 'Royal Flush'
 
     """
     def __init__(self):
