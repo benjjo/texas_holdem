@@ -19,20 +19,7 @@ class Bookie:
 
         # Map card ranks to indices in the matrix
         self.card_index = {
-            'A': 0,
-            'K': 1,
-            'Q': 2,
-            'J': 3,
-            'T': 4,
-            '9': 5,
-            '8': 6,
-            '7': 7,
-            '6': 8,
-            '5': 9,
-            '4': 10,
-            '3': 11,
-            '2': 12
-        }
+            'A': 0, 'K': 1, 'Q': 2, 'J': 3, 'T': 4, '9': 5, '8': 6, '7': 7, '6': 8, '5': 9, '4': 10, '3': 11, '2': 12}
 
     # Function to get the winning percentage from a tuple of two cards
     def get_winning_percentage(self, card_tuple):
