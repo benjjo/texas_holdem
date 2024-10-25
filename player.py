@@ -42,7 +42,7 @@ class Player(Rankinator):
         return self.best_hand_and_kicker
 
     # Return the hand type
-    def determine_highest_hand(self, card_list: list, hole_cards=None) -> bool:
+    def determine_highest_hand(self, card_list: list, hole_cards=None) -> None:
         # Sets the name of the first hand matched in the list.
         hole_cards = card_list[0:2] if not hole_cards else hole_cards
         functions = [self.Royal_Flush,
@@ -58,7 +58,7 @@ class Player(Rankinator):
         for func in functions:
             if func(card_list):  # Call each function and check if it returns True
                 self.set_best_hand_name(func.__name__.replace('_', " "))
-                return True
+                return None
 
         self.set_Kicker(hole_cards)
-        return False  # Default return if none return True
+        self.set_best_hand_name(self.best_hand_and_kicker[0])
