@@ -313,23 +313,22 @@ class RankerTester(unittest.TestCase):
 
         # Test False: King and Ace in hand
         hole_cards = [f'K{H}', f'A{H}']
-        self.assertFalse(player.Kicker(hole_cards), "Failed Kicker - test 1.1")
-
+        player.set_Kicker(hole_cards)
         self.assertTrue(player.best_hand_and_kicker[0] == 'Ace', "Failed Kicker - test 1.2")
 
         # Test True: best_hand set to Ace
         hole_cards = [f'A{H}', f'K{H}']
-        player.Kicker(hole_cards)
+        player.set_Kicker(hole_cards)
         self.assertTrue(player.best_hand_and_kicker[0] == 'Ace', "Failed Kicker - test 2")
 
         # Test True: best_hand set to 3
         hole_cards = [f'3{H}', f'2{H}']
-        player.Kicker(hole_cards)
+        player.set_Kicker(hole_cards)
         self.assertTrue(player.best_hand_and_kicker[0] == 'Three', "Failed Kicker - test 3")
 
         # Test True: best_hand set to T
         hole_cards = [f'9{H}', f'T{H}']
-        player.Kicker(hole_cards)
+        player.set_Kicker(hole_cards)
         self.assertTrue(player.best_hand_and_kicker[0] == 'Ten', "Failed Kicker - test 4")
 
     def test_get_winning_percentage(self):

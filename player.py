@@ -32,12 +32,11 @@ class Player(Rankinator):
             self.all_cards.update({key: self.card_map.get(key[0][0])})
 
     # Tools
-    def Kicker(self, hole_cards: list) -> bool:
+    def set_Kicker(self, hole_cards: list) -> None:
         high_hole_card = self.convert_cards_to_integers(self.strip_suit(hole_cards))
         rank = max(high_hole_card)
         card = RANKS_MAP[rank]
         self.set_best_hand_and_kicker([card, rank])
-        return False
 
     def get_best_hand_cards(self) -> tuple:
         return self.best_hand_and_kicker
@@ -61,5 +60,5 @@ class Player(Rankinator):
                 self.set_best_hand_name(func.__name__.replace('_', " "))
                 return True
 
-        self.Kicker(hole_cards)
+        self.set_Kicker(hole_cards)
         return False  # Default return if none return True
