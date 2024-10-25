@@ -7,36 +7,36 @@ class Player(Rankinator):
         super().__init__()
         self.best_hand_and_kicker = tuple()
         self.hole_cards = list()
-        self.best_hand = str()
         self.all_cards = dict()
+        self.best_hand_name = str()
 
     # Setters and getters
     def set_hole_cards(self, cards_list: list) -> None:
         self.hole_cards = cards_list
 
-    def set_best_hand_cards(self, cards: list) -> None:
-        self.best_hand_and_kicker = (cards,'')
+    def set_best_hand_name(self, name: str):
+        self.best_hand_name = name
+
+    def set_best_hand_and_kicker(self, hand_and_kicker: list) -> None:
+        self.best_hand_and_kicker = (hand_and_kicker[0], hand_and_kicker[1])
 
     def update_cards_in_play(self, hole_cards: list, community_cards: list) -> None:
         self.set_hole_cards(hole_cards)
         self.set_community_cards(community_cards)
         self.set_all_cards(hole_cards, community_cards)
 
-    def set_best_hand(self, hand: str) -> None:
-        self.best_hand = hand
-
     def set_all_cards(self, hole_cards: list, community_cards: list) -> None:
-        card_map = {'A': 14, 'K': 13, 'Q': 12, 'J': 11, 'T': 10, '9': 9, '8': 8,
-                    '7': 7, '6':6, '5': 5, '4': 4, '3': 3, '2': 2}
         full_card_list = hole_cards + community_cards
         self.all_cards.clear()
         for key in full_card_list:
-            self.all_cards.update({key: card_map.get(key[0][0])})
+            self.all_cards.update({key: self.card_map.get(key[0][0])})
 
     # Tools
     def Kicker(self, hole_cards: list) -> bool:
         high_hole_card = self.convert_cards_to_integers(self.strip_suit(hole_cards))
-        self.set_best_hand(RANKS[max(high_hole_card)])
+        rank = max(high_hole_card)
+        card = RANKS_MAP[rank]
+        self.set_best_hand_and_kicker([card, rank])
         return False
 
     def get_best_hand_cards(self) -> tuple:
@@ -58,7 +58,7 @@ class Player(Rankinator):
 
         for func in functions:
             if func(card_list):  # Call each function and check if it returns True
-                self.set_best_hand(func.__name__.replace('_', " "))
+                self.set_best_hand_name(func.__name__.replace('_', " "))
                 return True
 
         self.Kicker(hole_cards)
