@@ -25,37 +25,10 @@ class Rankinator:
         self.kicker_rank :  integer
             The rank of the kicker card held by the player
         """
-        self.hole_cards = list()
         self.community_cards = list()
-        self.all_cards = list()
-        self.all_cards_ranked = list()
-        self.best_hand = str()  # Used
-        self.best_hand_rank = int()  #
-        self.kicker_rank = int()  # Used to determine tie-break
-
-    # Setters and getters
-    def set_hole_cards(self, cards_list: list) -> None:
-        self.hole_cards = cards_list
 
     def set_community_cards(self, cards_list: list) -> None:
         self.community_cards = cards_list
-
-    def set_all_cards(self, hole_cards: list, community_cards: list) -> None:
-        self.all_cards = hole_cards + community_cards
-
-    def set_all_cards_ranked(self, cards_list: list) -> None:
-        self.all_cards_ranked = cards_list
-
-    def set_best_hand(self, hand: str) -> None:
-        self.best_hand = hand
-
-    def set_kicker_rank(self, cards: list) -> None:
-        self.kicker_rank = max(cards)
-
-    def update_cards_in_play(self, hole_cards: list, community_cards: list) -> None:
-        self.set_hole_cards(hole_cards)
-        self.set_community_cards(community_cards)
-        self.set_all_cards(hole_cards, community_cards)
 
     # Work functions
     def strip_suit(self, card_list: list) -> list:
@@ -68,9 +41,6 @@ class Rankinator:
         # Returns a list of cards with the selected suit
         suited_cards = [card for card in card_list if card[-1] == suit]
         return suited_cards
-
-    def store_cards_by_rank(self, cards_list: list) -> dict:
-        pass
 
     def convert_cards_to_integers(self, cards_list: list) -> list:
         # cards must be a list that has been stripped of the suit.
@@ -154,30 +124,3 @@ class Rankinator:
         count = Counter(cards_list)
         one_pair = [item for item, count in count.items() if count == 2]
         return len(one_pair) == 1
-
-    def Kicker(self, hole_cards: list) -> bool:
-        high_hole_card = self.convert_cards_to_integers(self.strip_suit(hole_cards))
-        self.set_best_hand(RANKS[max(high_hole_card)])
-        return False
-
-    # Return the hand type
-    def determine_highest_hand(self, card_list: list, hole_cards=None) -> bool:
-        # Sets the name of the first hand matched in the list.
-        hole_cards = card_list[0:2] if not hole_cards else hole_cards
-        functions = [self.Royal_Flush,
-                     self.Straight_Flush,
-                     self.Four_of_a_Kind,
-                     self.Full_House,
-                     self.Flush,
-                     self.Straight,
-                     self.Three_of_a_Kind,
-                     self.Two_Pair,
-                     self.One_Pair]
-
-        for func in functions:
-            if func(card_list):  # Call each function and check if it returns True
-                self.set_best_hand(func.__name__.replace('_', " "))
-                return True
-
-        self.Kicker(hole_cards)
-        return False  # Default return if none return True
