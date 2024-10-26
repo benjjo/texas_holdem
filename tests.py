@@ -427,6 +427,24 @@ class RankerTester(unittest.TestCase):
         self.assertListEqual(player.find_highest_straight(cards_list), [f'A{H}', f'K{H}', f'Q{S}', f'J{H}', f'T{H}'],
                              'Failed find_highest_straight - test 1')
 
+        # Test ListEqual: Royal Flush returned and not Straight flush
+        cards_list = [f'A{H}', f'K{H}', f'Q{S}', f'J{H}', f'T{H}', f'9{H}', f'8{H}']
+        player.set_all_cards([f'A{H}', f'K{H}'], [f'Q{S}', f'J{H}', f'T{H}', f'9{H}', f'8{H}'])
+        self.assertListEqual(player.find_highest_straight(cards_list), [f'A{H}', f'K{H}', f'Q{S}', f'J{H}', f'T{H}'],
+                             'Failed find_highest_straight - test 2')
+
+        # Test ListEqual: High straight returned, not the lower straight
+        cards_list = [f'2{H}', f'3{D}', f'5{S}', f'4{C}', f'7{H}', f'6{D}', f'8{S}']
+        player.set_all_cards([f'2{H}', f'3{D}'], [f'5{S}', f'4{C}', f'7{H}', f'6{D}', f'8{S}'])
+        self.assertListEqual(player.find_highest_straight(cards_list), [f'4{C}', f'5{S}', f'6{D}', f'7{H}', f'8{S}'],
+                             'Failed find_highest_straight - test 3')
+
+        # Test ListEqual: High straight returned (2-6), not the lower straight (A-5)
+        cards_list = [f'2{H}', f'3{D}', f'5{S}', f'4{C}', f'J{H}', f'6{D}', f'A{S}']
+        player.set_all_cards([f'2{H}', f'3{D}'], [f'5{S}', f'4{C}', f'J{H}', f'6{D}', f'A{S}'])
+        self.assertListEqual(player.find_highest_straight(cards_list), [f'2{H}', f'3{D}', f'4{C}',  f'5{S}', f'6{D}'],
+                             'Failed find_highest_straight - test 4')
+
     def test_get_cards_from_values(self):
         player = Player()
 
