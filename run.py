@@ -1,4 +1,5 @@
-from deck import *
+from dealer import *
 
 
-print(shuffle_deck())
+deal = Dealer()
+print(deal.shuffle_deck())
