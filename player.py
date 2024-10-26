@@ -102,5 +102,5 @@ class Player(Rankinator):
                 # Update highest_straight if current_straight is higher
                 if not highest_straight or current_straight[-1] > highest_straight[-1]:
                     highest_straight = current_straight
-        print(self.all_cards)
-        return highest_straight  # Returns the highest straight found
+
+        return self.get_cards_from_values(highest_straight)  # Returns the highest straight found
