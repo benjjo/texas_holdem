@@ -418,6 +418,34 @@ class RankerTester(unittest.TestCase):
         self.assertTrue(all(card in player.get_best_hand_cards()[0] for card in hand_list),
                         'Failed set_best_hand_cards - test 5.2')
 
+    def test_find_highest_straight(self):
+        player = Player()
+
+        # Test ListEqual: Royal Flush returned and not the lower suited
+        cards_list = [f'A{H}', f'K{H}', f'Q{S}', f'J{H}', f'T{H}', f'9{H}', f'8{S}']
+        player.set_all_cards([f'A{H}', f'K{H}'], [f'Q{S}', f'J{H}', f'T{H}', f'9{H}', f'8{S}'])
+        self.assertListEqual(player.find_highest_straight(cards_list), [f'A{H}', f'K{H}', f'Q{S}', f'J{H}', f'T{H}'],
+                             'Failed find_highest_straight - test 1')
+
+    def test_get_cards_from_values(self):
+        player = Player()
+
+        # Test ListEqual
+        player.set_all_cards([f'A{H}', f'K{H}'], [f'Q{S}', f'J{H}', f'T{H}', f'9{H}', f'8{S}'])
+        values = [14, 13, 12, 11, 10]
+        cards = [f'A{H}', f'K{H}', f'Q{S}', f'J{H}', f'T{H}']
+        self.assertListEqual(player.get_cards_from_values(values), cards, 'Failed get_cards_from_values - test 1')
+
+        # Test ListEqual
+        values = [14, 10]
+        cards = [f'A{H}', f'T{H}']
+        self.assertListEqual(player.get_cards_from_values(values), cards, 'Failed get_cards_from_values - test 2')
+
+        # Test ListEqual
+        values = [8, 9, 13]
+        cards = [f'K{H}', f'9{H}', f'8{S}']
+        self.assertListEqual(player.get_cards_from_values(values), cards, 'Failed get_cards_from_values - test 3')
+
 
 # Run tests:
 if __name__ == '__main__':

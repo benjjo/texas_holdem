@@ -47,6 +47,10 @@ class Player(Rankinator):
         for key in full_card_list:
             self.all_cards.update({key: self.card_map.get(key[0][0])})
 
+    def get_cards_from_values(self, cards_list: list) -> list:
+        # self.all_cards must be True
+        return [key for key, value in self.all_cards.items() if value in cards_list]
+
     # Tools
     def set_Kicker(self, hole_cards: list) -> None:
         high_hole_card = self.convert_cards_to_integers(self.strip_suit(hole_cards))
@@ -78,3 +82,25 @@ class Player(Rankinator):
 
         self.set_Kicker(hole_cards)
         self.set_best_hand_name(self.best_hand_and_kicker[0])
+
+    def find_highest_straight(self, card_list: list) -> list:
+        # Extract ranks and convert them to numeric values
+        possible_ranks = self.strip_suit(card_list=card_list)
+        possible_ranks = self.convert_cards_to_integers(possible_ranks)
+        # Remove duplicates and sort the ranks as integers
+        sorted_ranks = sorted(set(possible_ranks))
+
+        # Variable to store the highest straight found
+        highest_straight = []
+
+        # Check for 5 consecutive numbers
+        for i in range(len(sorted_ranks) - 4):
+            # Check if 5 consecutive numbers form a straight
+            if all(sorted_ranks[i + j] == sorted_ranks[i] + j for j in range(5)):
+                current_straight = sorted_ranks[i:i + 5]
+
+                # Update highest_straight if current_straight is higher
+                if not highest_straight or current_straight[-1] > highest_straight[-1]:
+                    highest_straight = current_straight
+        print(self.all_cards)
+        return highest_straight  # Returns the highest straight found
