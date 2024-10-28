@@ -32,10 +32,19 @@ class Rankinator:
 
     # Work functions
     def strip_suit(self, card_list: list) -> list:
-        # Return a list of cards with the suit removed.
+        """Helper function to Return a list of cards with the suit removed."""
         suits = [f'{H}', f'{D}', f'{S}', f'{C}']
         stripped_cards = [''.join(c for c in s if c not in suits) for s in card_list]
         return stripped_cards if stripped_cards else card_list
+
+    def get_rank_and_suit(self, card: str) -> tuple:
+        """Helper function to get the rank and suit from a card."""
+        return card[:-1], card[-1]
+
+    def all_cards_in_list(self, list1, list2):
+        """Helper method that checks whether every element from list1 is present in list2.
+        It returns True if all elements of list1 are in list2 and False otherwise."""
+        return all(card in list2 for card in list1)
 
     def filter_cards_by_suit(self, card_list: list, suit: str) -> list:
         # Returns a list of cards with the selected suit
@@ -43,9 +52,9 @@ class Rankinator:
         return suited_cards
 
     def convert_cards_to_integers(self, cards_list: list) -> list:
-        # cards must be a list that has been stripped of the suit.
-        # Ace is duplicated to 1 and 14.
-        # Returns a unique sorted integer list
+        """cards must be a list that has been stripped of the suit.
+        Ace is duplicated to 1 and 14.
+        Returns a unique sorted integer list"""
         cards_list = ['10' if item == 'T' else item for item in cards_list]
         cards_list = ['11' if item == 'J' else item for item in cards_list]
         cards_list = ['12' if item == 'Q' else item for item in cards_list]

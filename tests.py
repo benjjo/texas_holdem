@@ -255,59 +255,6 @@ class RankerTester(unittest.TestCase):
         cards_list = [f'A{S}', f'K{H}', f'Q{H}', f'J{H}', f'T{H}', f'9{S}', f'2{S}']
         self.assertFalse(rank.Royal_Flush(cards_list), "Failed check_Royal_Flush - test 2")
 
-    def test_determine_highest_hand(self):
-        player = Player()
-
-        # Test True: Royal flush in hand
-        cards_list = [f'A{H}', f'K{H}', f'Q{H}', f'J{H}', f'T{H}', f'9{S}', f'2{S}']
-        player.determine_highest_hand(cards_list)
-        self.assertTrue(player.best_hand_name == 'Royal Flush', "Failed determine_highest_hand - test 1")
-
-        # Test True: Straight flush in hand
-        cards_list = [f'5{H}', f'4{H}', f'6{H}', f'7{H}', f'8{H}', f'9{S}', f'2{S}']
-        player.determine_highest_hand(cards_list)
-        self.assertTrue(player.best_hand_name == 'Straight Flush', "Failed determine_highest_hand - test 2")
-
-        # Test True: Four of a kind in hand
-        cards_list = [f'A{H}', f'A{D}', f'A{S}', f'A{C}', f'T{H}', f'9{S}', f'2{S}']
-        player.determine_highest_hand(cards_list)
-        self.assertTrue(player.best_hand_name == 'Four of a Kind', "Failed determine_highest_hand - test 3")
-
-        # Test True: full house in hand
-        cards_list = [f'A{H}', f'A{D}', f'A{S}', f'T{D}', f'T{H}', f'9{S}', f'2{S}']
-        player.determine_highest_hand(cards_list)
-        self.assertTrue(player.best_hand_name == 'Full House', "Failed determine_highest_hand - test 4")
-
-        # Test True: flush in hand
-        cards_list = [f'A{H}', f'9{H}', f'2{H}', f'J{H}', f'T{H}', f'9{S}', f'2{S}']
-        player.determine_highest_hand(cards_list)
-        self.assertTrue(player.best_hand_name == 'Flush', "Failed determine_highest_hand - test 5")
-
-        # Test True: Straight in hand
-        cards_list = [f'3{D}', f'4{C}', f'5{H}', f'6{H}', f'7{H}', f'8{S}', f'2{S}']
-        player.determine_highest_hand(cards_list)
-        self.assertTrue(player.best_hand_name == 'Straight', "Failed determine_highest_hand - test 6")
-
-        # Test True: Three of a kind in hand
-        cards_list = [f'A{H}', f'A{D}', f'A{S}', f'J{H}', f'T{H}', f'9{S}', f'2{S}']
-        player.determine_highest_hand(cards_list)
-        self.assertTrue(player.best_hand_name == 'Three of a Kind', "Failed determine_highest_hand - test 7")
-
-        # Test True: Two Pair in hand
-        cards_list = [f'A{H}', f'A{D}', f'J{S}', f'J{H}', f'T{H}', f'9{S}', f'2{S}']
-        player.determine_highest_hand(cards_list)
-        self.assertTrue(player.best_hand_name == 'Two Pair', "Failed determine_highest_hand - test 8")
-
-        # Test True: Three of a kind in hand
-        cards_list = [f'A{H}', f'A{D}', f'4{S}', f'J{H}', f'7{H}', f'9{S}', f'2{S}']
-        player.determine_highest_hand(cards_list)
-        self.assertTrue(player.best_hand_name == 'One Pair', "Failed determine_highest_hand - test 9")
-
-        # Test False: Kicker card and False hand match
-        cards_list = [f'Q{H}', f'A{D}', f'J{S}', f'9{H}', f'7{H}', f'5{S}', f'2{S}']
-        player.determine_highest_hand(cards_list)
-        self.assertTrue(player.best_hand_name == 'Ace', "Failed determine_highest_hand - test 10")
-
     def test_get_Kicker(self):
         player = Player()
 
@@ -327,47 +274,36 @@ class RankerTester(unittest.TestCase):
         hole_cards = [f'9{H}', f'T{H}']
         self.assertTrue(player.get_Kicker(hole_cards) == 'Ten', "Failed Kicker - test 4")
 
+    def test_get_cards_from_values(self):
+        player = Player()
+
+        # Test ListEqual
+        player.set_all_cards([f'A{H}', f'K{H}'], [f'Q{S}', f'J{H}', f'T{H}', f'9{H}', f'8{S}'])
+        values = [14, 13, 12, 11, 10]
+        cards = [f'A{H}', f'K{H}', f'Q{S}', f'J{H}', f'T{H}']
+        self.assertListEqual(player.get_cards_from_values(values), cards, 'Failed get_cards_from_values - test 1')
+
+        # Test ListEqual
+        values = [14, 10]
+        cards = [f'A{H}', f'T{H}']
+        self.assertListEqual(player.get_cards_from_values(values), cards, 'Failed get_cards_from_values - test 2')
+
+        # Test ListEqual
+        values = [8, 9, 13]
+        cards = [f'8{S}', f'9{H}', f'K{H}']
+        self.assertListEqual(player.get_cards_from_values(values), cards, 'Failed get_cards_from_values - test 3')
+
     def test_set_best_hand_and_kicker(self):
         player = Player()
 
         # Test ListEqual: Royal Flush returned and not the lower suited
-        cards_list = [f'A{H}', f'K{H}', f'Q{H}', f'J{H}', f'T{H}', f'9{H}', f'2{S}']
-        hand_list = [f'A{H}', f'K{H}', f'Q{H}', f'J{H}', f'T{H}']
-        player.set_best_hand_and_kicker(cards_list)
-        self.assertListEqual(player.get_best_hand_cards()[0],hand_list, 'Failed set_best_hand_cards - test 1')
-
-        # Test ListEqual: Straight Flush returned and not the lower suited
-        cards_list = [f'T{H}', f'9{H}', f'8{H}', f'7{H}', f'6{H}', f'5{H}', f'4{S}']
-        hand_list = [f'T{H}', f'9{H}', f'8{H}', f'7{H}', f'6{H}']
-        player.set_best_hand_and_kicker(cards_list)
-        self.assertListEqual(player.get_best_hand_cards()[0],hand_list, 'Failed set_best_hand_cards - test 2')
-
-        # Test True: Four of a kind returned with suits
-        cards_list = [f'T{H}', f'T{D}', f'T{S}', f'T{C}', f'6{H}', f'6{D}', f'6{S}']
-        hand_list = [f'T{H}', f'T{D}', f'T{S}', f'T{C}']
-        player.set_best_hand_and_kicker(cards_list)
-        # First check that there are four cards
-        self.assertTrue(len(player.get_best_hand_cards()[0]) == 4, 'Failed set_best_hand_cards - test 3.1')
-        self.assertTrue(all(card in player.get_best_hand_cards()[0] for card in hand_list),
-                        'Failed set_best_hand_cards - test 3.2')
-
-        # Test True: Full-house returned with suits
-        cards_list = [f'T{H}', f'T{D}', f'T{S}', f'K{C}', f'6{H}', f'6{D}', f'6{S}']
-        hand_list = [f'T{H}', f'T{D}', f'T{S}']
-        player.set_best_hand_and_kicker(cards_list)
-        # First check that there are four cards
-        self.assertTrue(len(player.get_best_hand_cards()[0]) == 5, 'Failed set_best_hand_cards - test 4.1')
-        self.assertTrue(all(card in player.get_best_hand_cards()[0] for card in hand_list),
-                        'Failed set_best_hand_cards - test 4.2')
-
-        # Test True: Three of a kind returned with suits
-        cards_list = [f'T{H}', f'2{D}', f'4{S}', f'Q{C}', f'6{H}', f'6{D}', f'6{S}']
-        hand_list = [f'6{H}', f'6{D}', f'6{S}']
-        player.set_best_hand_and_kicker(cards_list)
-        # First check that there are four cards
-        self.assertTrue(len(player.get_best_hand_cards()[0]) == 3, 'Failed set_best_hand_cards - test 5.1')
-        self.assertTrue(all(card in player.get_best_hand_cards()[0] for card in hand_list),
-                        'Failed set_best_hand_cards - test 5.2')
+        hand = [f'A{H}', f'K{H}', f'Q{H}', f'J{H}', f'T{H}']
+        kicker = f'A{H}'
+        player.set_best_hand_and_kicker(hand, kicker)
+        self.assertListEqual(player.get_best_hand_cards(),hand,
+                             'Failed set_best_hand_cards - test 1')
+        self.assertTrue(player.best_hand_and_kicker[1] == kicker,
+                        'Failed set_best_hand_cards - test 2')
 
     def test_get_winning_percentage(self):
         bookmaker = Bookie()
@@ -414,52 +350,170 @@ class RankerTester(unittest.TestCase):
         player.set_all_cards(hole_cards, community_cards_list)
         self.assertTrue(player.all_cards.get(f'A{H}') == 14, 'Failed set_all_cards - test 7')
 
+    def test_find_highest_ranked_hand(self):
+        player = Player()
+
+        # Test True: Royal flush in hand
+        cards_list = [f'A{H}', f'K{H}', f'Q{H}', f'J{H}', f'T{H}', f'9{S}', f'2{S}']
+        player.find_highest_ranked_hand(cards_list)
+        self.assertTrue(player.best_hand_name == 'Royal Flush', "Failed determine_highest_hand - test 1")
+
+        # Test True: Straight flush in hand
+        cards_list = [f'5{H}', f'4{H}', f'6{H}', f'7{H}', f'8{H}', f'9{S}', f'2{S}']
+        player.find_highest_ranked_hand(cards_list)
+        self.assertTrue(player.best_hand_name == 'Straight Flush', "Failed determine_highest_hand - test 2")
+
+        # Test True: Four of a kind in hand
+        cards_list = [f'A{H}', f'A{D}', f'A{S}', f'A{C}', f'T{H}', f'9{S}', f'2{S}']
+        player.find_highest_ranked_hand(cards_list)
+        self.assertTrue(player.best_hand_name == 'Four of a Kind', "Failed determine_highest_hand - test 3")
+
+        # Test True: full house in hand
+        cards_list = [f'A{H}', f'A{D}', f'A{S}', f'T{D}', f'T{H}', f'9{S}', f'2{S}']
+        player.find_highest_ranked_hand(cards_list)
+        self.assertTrue(player.best_hand_name == 'Full House', "Failed determine_highest_hand - test 4")
+
+        # Test True: flush in hand
+        cards_list = [f'A{H}', f'9{H}', f'2{H}', f'J{H}', f'T{H}', f'9{S}', f'2{S}']
+        player.find_highest_ranked_hand(cards_list)
+        self.assertTrue(player.best_hand_name == 'Flush', "Failed determine_highest_hand - test 5")
+
+        # Test True: Straight in hand
+        cards_list = [f'3{D}', f'4{C}', f'5{H}', f'6{H}', f'7{H}', f'8{S}', f'2{S}']
+        player.find_highest_ranked_hand(cards_list)
+        self.assertTrue(player.best_hand_name == 'Straight', "Failed determine_highest_hand - test 6")
+
+        # Test True: Three of a kind in hand
+        cards_list = [f'A{H}', f'A{D}', f'A{S}', f'J{H}', f'T{H}', f'9{S}', f'2{S}']
+        player.find_highest_ranked_hand(cards_list)
+        self.assertTrue(player.best_hand_name == 'Three of a Kind', "Failed determine_highest_hand - test 7")
+
+        # Test True: Two Pair in hand
+        cards_list = [f'A{H}', f'A{D}', f'J{S}', f'J{H}', f'T{H}', f'9{S}', f'2{S}']
+        player.find_highest_ranked_hand(cards_list)
+        self.assertTrue(player.best_hand_name == 'Two Pair', "Failed determine_highest_hand - test 8")
+
+        # Test True: Three of a kind in hand
+        cards_list = [f'A{H}', f'A{D}', f'4{S}', f'J{H}', f'7{H}', f'9{S}', f'2{S}']
+        player.find_highest_ranked_hand(cards_list)
+        self.assertTrue(player.best_hand_name == 'One Pair', "Failed determine_highest_hand - test 9")
+
+        # Test False: Kicker card and False hand match
+        cards_list = [f'Q{H}', f'A{D}', f'J{S}', f'9{H}', f'7{H}', f'5{S}', f'2{S}']
+        player.find_highest_ranked_hand(cards_list)
+        self.assertTrue(player.best_hand_name == 'Ace', "Failed determine_highest_hand - test 10")
+
+    def test_find_royal_flush(self):
+        player = Player()
+        # Test ListEqual: Royal Flush returned and not the lower suited
+        hole_cards = [f'A{H}', f'K{H}']
+        community_cards = [f'Q{H}', f'J{H}', f'T{H}', f'9{H}', f'2{S}']
+        high_hand_list = [f'A{H}', f'K{H}', f'Q{H}', f'J{H}', f'T{H}']
+        player.set_all_cards(hole_cards=hole_cards, community_cards=community_cards)
+        self.assertListEqual(player.find_royal_flush(), high_hand_list, 'Failed find_royal_flush - Test 1')
+
+        # Test ListEqual: Royal Flush returned and not the lower suited (hole cards with lower cards)
+        hole_cards = [f'Q{H}', f'9{H}']
+        community_cards = [f'A{H}', f'J{H}', f'T{H}', f'K{H}', f'2{S}']
+        high_hand_list = [f'A{H}', f'K{H}', f'Q{H}', f'J{H}', f'T{H}']
+        player.set_all_cards(hole_cards=hole_cards, community_cards=community_cards)
+        self.assertListEqual(player.find_royal_flush(), high_hand_list, 'Failed find_royal_flush - Test 1')
+
+    def test_find_highest_straight_flush(self):
+        player = Player()
+        # Test ListEqual: Straight flush returned
+        hole_cards = [f'2{S}', f'K{H}']
+        community_cards = [f'Q{H}', f'J{H}', f'T{H}', f'9{H}', f'3{S}']
+        high_hand_list = [f'9{H}', f'T{H}', f'J{H}', f'Q{H}', f'K{H}']
+        player.set_all_cards(hole_cards=hole_cards, community_cards=community_cards)
+        self.assertListEqual(player.find_highest_straight_flush(), high_hand_list,
+                             'Failed find_highest_straight_flush - Test 1')
+
+    def test_find_four_of_a_kind(self):
+        player = Player()
+        # Test True
+        hole_cards = [f'9{H}', f'K{H}']
+        community_cards = [f'9{D}', f'9{S}', f'9{C}', f'3{S}', f'2{S}']
+        high_hand_list = [f'9{H}', f'9{D}', f'9{S}', f'9{C}']
+        player.set_all_cards(hole_cards=hole_cards, community_cards=community_cards)
+        self.assertTrue(player.all_cards_in_list(player.find_four_of_a_kind(), high_hand_list),
+                        'Failed find_four_of_a_kind - Test 1')
+
+    def test_find_highest_boat(self):
+        player = Player()
+        # Test True
+        hole_cards = [f'9{H}', f'9{C}']
+        community_cards = [f'9{D}', f'A{S}', f'A{C}', f'3{S}', f'2{S}']
+        high_hand_list = [f'9{H}', f'9{C}', f'9{D}', f'A{S}', f'A{C}']
+        player.set_all_cards(hole_cards=hole_cards, community_cards=community_cards)
+        self.assertTrue(player.all_cards_in_list(player.find_highest_boat(), high_hand_list),
+                        'Failed find_highest_boat - Test 1')
+
+    def test_find_highest_flush(self):
+        player = Player()
+        # Test True
+        hole_cards = [f'9{H}', f'T{H}']
+        community_cards = [f'2{H}', f'4{H}', f'A{H}', f'3{S}', f'2{S}']
+        high_hand_list = [f'9{H}', f'T{H}', f'2{H}', f'4{H}', f'A{H}']
+        player.set_all_cards(hole_cards=hole_cards, community_cards=community_cards)
+        self.assertTrue(player.all_cards_in_list(player.find_highest_flush(), high_hand_list),
+                        'Failed find_highest_flush - Test 1')
+
     def test_find_highest_straight(self):
         player = Player()
+        # Test ListEqual: Straight flush returned
+        hole_cards = [f'2{S}', f'K{H}']
+        community_cards = [f'Q{H}', f'J{H}', f'T{H}', f'9{H}', f'3{S}']
+        high_hand_list = [f'9{H}', f'T{H}', f'J{H}', f'Q{H}', f'K{H}']
+        player.set_all_cards(hole_cards=hole_cards, community_cards=community_cards)
 
         # Test ListEqual: Royal Flush returned and not the lower suited
-        cards_list = [f'A{H}', f'K{H}', f'Q{S}', f'J{H}', f'T{H}', f'9{H}', f'8{S}']
-        player.set_all_cards([f'A{H}', f'K{H}'], [f'Q{S}', f'J{H}', f'T{H}', f'9{H}', f'8{S}'])
-        self.assertListEqual(player.find_highest_straight(cards_list), [f'T{H}', f'J{H}', f'Q{S}', f'K{H}', f'A{H}'],
+        self.assertListEqual(player.find_highest_straight(), high_hand_list,
                              'Failed find_highest_straight - test 1')
 
-        # Test ListEqual: Royal Flush returned and not Straight flush
-        cards_list = [f'A{H}', f'K{H}', f'Q{S}', f'J{H}', f'T{H}', f'9{H}', f'8{H}']
-        player.set_all_cards([f'A{H}', f'K{H}'], [f'Q{S}', f'J{H}', f'T{H}', f'9{H}', f'8{H}'])
-        self.assertListEqual(player.find_highest_straight(cards_list), [f'T{H}', f'J{H}', f'Q{S}', f'K{H}', f'A{H}'],
+        # Test ListEqual: High straight returned, not the lower straight
+        hole_cards = [f'2{H}', f'3{D}']
+        cards_list = [f'5{S}', f'4{C}', f'7{H}', f'6{D}', f'8{S}']
+        player.set_all_cards(hole_cards=hole_cards, community_cards=cards_list)
+        self.assertListEqual(player.find_highest_straight(), [f'4{C}', f'5{S}', f'6{D}', f'7{H}', f'8{S}'],
                              'Failed find_highest_straight - test 2')
 
-        # Test ListEqual: High straight returned, not the lower straight
-        cards_list = [f'2{H}', f'3{D}', f'5{S}', f'4{C}', f'7{H}', f'6{D}', f'8{S}']
-        player.set_all_cards([f'2{H}', f'3{D}'], [f'5{S}', f'4{C}', f'7{H}', f'6{D}', f'8{S}'])
-        self.assertListEqual(player.find_highest_straight(cards_list),
-                             [f'4{C}', f'5{S}', f'6{D}', f'7{H}', f'8{S}'],
+        # Test ListEqual: High straight returned (2-6), not the lower straight (A-5)
+        hole_cards = [f'2{H}', f'3{D}']
+        cards_list = [f'5{S}', f'4{C}', f'J{H}', f'6{D}', f'A{S}']
+        player.set_all_cards(hole_cards=hole_cards, community_cards=cards_list)
+        self.assertListEqual(player.find_highest_straight(), [f'2{H}', f'3{D}', f'4{C}',  f'5{S}', f'6{D}'],
                              'Failed find_highest_straight - test 3')
 
-        # Test ListEqual: High straight returned (2-6), not the lower straight (A-5)
-        cards_list = [f'2{H}', f'3{D}', f'5{S}', f'4{C}', f'J{H}', f'6{D}', f'A{S}']
-        player.set_all_cards([f'2{H}', f'3{D}'], [f'5{S}', f'4{C}', f'J{H}', f'6{D}', f'A{S}'])
-        self.assertListEqual(player.find_highest_straight(cards_list), [f'2{H}', f'3{D}', f'4{C}',  f'5{S}', f'6{D}'],
-                             'Failed find_highest_straight - test 4')
-
-    def test_get_cards_from_values(self):
+    def test_find_highest_three_of_a_kind(self):
         player = Player()
+        # Test True
+        hole_cards = [f'9{H}', f'K{H}']
+        community_cards = [f'9{D}', f'9{S}', f'4{C}', f'3{S}', f'2{S}']
+        high_hand_list = [f'9{H}', f'9{D}', f'9{S}']
+        player.set_all_cards(hole_cards=hole_cards, community_cards=community_cards)
+        self.assertTrue(player.all_cards_in_list(player.find_highest_three_of_a_kind(), high_hand_list),
+                        'Failed find_highest_three_of_a_kind - Test 1')
 
-        # Test ListEqual
-        player.set_all_cards([f'A{H}', f'K{H}'], [f'Q{S}', f'J{H}', f'T{H}', f'9{H}', f'8{S}'])
-        values = [14, 13, 12, 11, 10]
-        cards = [f'A{H}', f'K{H}', f'Q{S}', f'J{H}', f'T{H}']
-        self.assertListEqual(player.get_cards_from_values(values), cards, 'Failed get_cards_from_values - test 1')
+    def test_find_highest_two_pair(self):
+        player = Player()
+        # Test True
+        hole_cards = [f'9{H}', f'K{H}']
+        community_cards = [f'9{D}', f'K{S}', f'4{C}', f'3{S}', f'2{S}']
+        high_hand_list = [f'9{H}', f'9{D}', f'K{H}', f'K{S}']
+        player.set_all_cards(hole_cards=hole_cards, community_cards=community_cards)
+        self.assertTrue(player.all_cards_in_list(player.find_highest_two_pair(), high_hand_list),
+                        'Failed find_highest_two_pair - Test 1')
 
-        # Test ListEqual
-        values = [14, 10]
-        cards = [f'A{H}', f'T{H}']
-        self.assertListEqual(player.get_cards_from_values(values), cards, 'Failed get_cards_from_values - test 2')
-
-        # Test ListEqual
-        values = [8, 9, 13]
-        cards = [f'8{S}', f'9{H}', f'K{H}']
-        self.assertListEqual(player.get_cards_from_values(values), cards, 'Failed get_cards_from_values - test 3')
+    def test_find_highest_pair(self):
+        player = Player()
+        # Test True
+        hole_cards = [f'9{H}', f'K{H}']
+        community_cards = [f'9{D}', f'Q{S}', f'4{C}', f'3{S}', f'2{S}']
+        high_hand_list = [f'9{H}', f'9{D}']
+        player.set_all_cards(hole_cards=hole_cards, community_cards=community_cards)
+        self.assertTrue(player.all_cards_in_list(player.find_highest_pair(), high_hand_list),
+                        'Failed find_highest_pair - Test 1')
 
 
 # Run tests:
