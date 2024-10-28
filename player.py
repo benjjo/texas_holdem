@@ -45,20 +45,26 @@ class Player(Rankinator):
         full_card_list = hole_cards + community_cards
         self.all_cards.clear()
         for key in full_card_list:
-            self.all_cards.update({key: self.card_map.get(key[0][0])})
+            self.all_cards.update({key: CARDS_MAP.get(key[0][0])})
 
     def get_cards_from_values(self, cards_list: list) -> list:
         # self.all_cards must be True
-        return [key for key, value in self.all_cards.items() if value in cards_list]
+        list_of_cards = list()
+        for value in cards_list:
+            list_of_cards.append(list(self.all_cards.keys())[list(self.all_cards.values()).index(value)])
+
+        return list_of_cards
 
     # Tools
-    def set_Kicker(self, hole_cards: list) -> None:
+    def get_Kicker(self, hole_cards: list) -> str:
         high_hole_card = self.convert_cards_to_integers(self.strip_suit(hole_cards))
         rank = max(high_hole_card)
         card = RANKS_MAP[rank]
-        self.set_best_hand_and_kicker([card, rank])
+        print('::: set_Kicker :::')
+        return card
 
     def get_best_hand_cards(self) -> list:
+        print(self.best_hand_and_kicker[0])
         return self.best_hand_and_kicker[0]
 
     # Return the hand type
@@ -79,8 +85,7 @@ class Player(Rankinator):
             if func(card_list):  # Call each function and check if it returns True
                 self.set_best_hand_name(func.__name__.replace('_', " "))
                 return None
-
-        self.set_Kicker(hole_cards)
+        self.get_Kicker(hole_cards)
         self.set_best_hand_name(self.best_hand_and_kicker[0])
 
     def find_highest_straight(self, card_list: list) -> list:

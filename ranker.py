@@ -26,8 +26,6 @@ class Rankinator:
             The rank of the kicker card held by the player
         """
         self.community_cards = list()
-        self.card_map = {'A': 14, 'K': 13, 'Q': 12, 'J': 11, 'T': 10, '9': 9, '8': 8,
-                         '7': 7, '6':6, '5': 5, '4': 4, '3': 3, '2': 2}
 
     def set_community_cards(self, cards_list: list) -> None:
         self.community_cards = cards_list
