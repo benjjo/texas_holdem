@@ -15,8 +15,11 @@ class Player(Rankinator):
         self.all_cards : dict()
             Holds the hole cards and the community cards and their respective ranks for this player. eg
             {'K♥': 13, 'Q♥': 12, 'J♥': 11, 'T♥': 10, '9♠': 9, '2♠': 2, 'T♠': 10}
-        self.best_hand_name = str()
+        self.best_hand_name : str()
             Holds the name of the best hand. eg 'Royal Flush'
+        self.player_ranking : dict()
+            Holds the ranking information associated with this players hand.
+            {'Player_Name': [int(Hand Rank), int(Kicker)]}
 
     """
     def __init__(self):
@@ -25,6 +28,7 @@ class Player(Rankinator):
         self.hole_cards = list()
         self.all_cards = dict()
         self.best_hand_name = str()
+        self.player_ranking = dict()
 
     # Setters and getters
     def set_hole_cards(self, cards_list: list) -> None:
@@ -43,7 +47,7 @@ class Player(Rankinator):
             self.all_cards.update({key: CARDS_MAP.get(key[0][0])})
 
     def get_cards_from_values(self, cards_list: list) -> list:
-        # self.all_cards must be True
+        # self.all_cards must be already set
         list_of_cards = list()
         for value in cards_list:
             list_of_cards.append(list(self.all_cards.keys())[list(self.all_cards.values()).index(value)])
@@ -287,9 +291,9 @@ class Player(Rankinator):
     def find_highest_two_pair(self) -> list:
         """This method efficiently finds and returns the highest two pairs from
         the available cards in self.all_cards.
-            This method assumes that two pairs already exist.
-            If that assumption is not true, it may return unexpected results.
-            If there are more than two cards of the same rank, this method will still
+            - This method assumes that two pairs already exist.
+            - If that assumption is not true, it may return unexpected results.
+            - If there are more than two cards of the same rank, this method will still
             only take two for the pair."""
         # Step 1: Count occurrences of each rank
         rank_counts = {}

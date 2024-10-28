@@ -429,6 +429,14 @@ class RankerTester(unittest.TestCase):
         self.assertListEqual(player.find_highest_straight_flush(), high_hand_list,
                              'Failed find_highest_straight_flush - Test 1')
 
+        # Test ListEqual: Straight flush returned
+        hole_cards = [f'7{H}', f'K{H}']
+        community_cards = [f'Q{H}', f'J{H}', f'T{H}', f'9{H}', f'8{H}']
+        high_hand_list = [f'9{H}', f'T{H}', f'J{H}', f'Q{H}', f'K{H}']
+        player.set_all_cards(hole_cards=hole_cards, community_cards=community_cards)
+        self.assertListEqual(player.find_highest_straight_flush(), high_hand_list,
+                             'Failed find_highest_straight_flush - Test 2')
+
     def test_find_four_of_a_kind(self):
         player = Player()
         # Test True
@@ -438,6 +446,13 @@ class RankerTester(unittest.TestCase):
         player.set_all_cards(hole_cards=hole_cards, community_cards=community_cards)
         self.assertTrue(player.all_cards_in_list(player.find_four_of_a_kind(), high_hand_list),
                         'Failed find_four_of_a_kind - Test 1')
+        # Test True
+        hole_cards = [f'2{S}', f'K{H}']
+        community_cards = [f'9{D}', f'9{S}', f'9{C}', f'3{S}', f'9{H}']
+        high_hand_list = [f'9{H}', f'9{D}', f'9{S}', f'9{C}']
+        player.set_all_cards(hole_cards=hole_cards, community_cards=community_cards)
+        self.assertTrue(player.all_cards_in_list(player.find_four_of_a_kind(), high_hand_list),
+                        'Failed find_four_of_a_kind - Test 2')
 
     def test_find_highest_boat(self):
         player = Player()
@@ -448,6 +463,13 @@ class RankerTester(unittest.TestCase):
         player.set_all_cards(hole_cards=hole_cards, community_cards=community_cards)
         self.assertTrue(player.all_cards_in_list(player.find_highest_boat(), high_hand_list),
                         'Failed find_highest_boat - Test 1')
+        # Test True
+        hole_cards = [f'9{H}', f'9{C}']
+        community_cards = [f'9{D}', f'A{S}', f'A{C}', f'A{H}', f'2{S}']
+        high_hand_list = [f'9{H}', f'9{C}', f'A{S}', f'A{C}', f'A{H}']
+        player.set_all_cards(hole_cards=hole_cards, community_cards=community_cards)
+        self.assertTrue(player.all_cards_in_list(player.find_highest_boat(), high_hand_list),
+                        'Failed find_highest_boat - Test 2')
 
     def test_find_highest_flush(self):
         player = Player()
@@ -458,6 +480,13 @@ class RankerTester(unittest.TestCase):
         player.set_all_cards(hole_cards=hole_cards, community_cards=community_cards)
         self.assertTrue(player.all_cards_in_list(player.find_highest_flush(), high_hand_list),
                         'Failed find_highest_flush - Test 1')
+        # Test True
+        hole_cards = [f'9{H}', f'T{H}']
+        community_cards = [f'K{H}', f'4{H}', f'A{H}', f'3{H}', f'2{H}']
+        high_hand_list = [f'A{H}', f'K{H}', f'T{H}', f'9{H}', f'4{H}']
+        player.set_all_cards(hole_cards=hole_cards, community_cards=community_cards)
+        self.assertTrue(player.all_cards_in_list(player.find_highest_flush(), high_hand_list),
+                        'Failed find_highest_flush - Test 2')
 
     def test_find_highest_straight(self):
         player = Player()
@@ -494,6 +523,13 @@ class RankerTester(unittest.TestCase):
         player.set_all_cards(hole_cards=hole_cards, community_cards=community_cards)
         self.assertTrue(player.all_cards_in_list(player.find_highest_three_of_a_kind(), high_hand_list),
                         'Failed find_highest_three_of_a_kind - Test 1')
+        # Test True
+        hole_cards = [f'9{H}', f'K{H}']
+        community_cards = [f'9{D}', f'9{S}', f'A{C}', f'A{S}', f'A{H}']
+        high_hand_list = [f'A{C}', f'A{S}', f'A{H}']
+        player.set_all_cards(hole_cards=hole_cards, community_cards=community_cards)
+        self.assertTrue(player.all_cards_in_list(player.find_highest_three_of_a_kind(), high_hand_list),
+                        'Failed find_highest_three_of_a_kind - Test 2')
 
     def test_find_highest_two_pair(self):
         player = Player()
@@ -505,6 +541,14 @@ class RankerTester(unittest.TestCase):
         self.assertTrue(player.all_cards_in_list(player.find_highest_two_pair(), high_hand_list),
                         'Failed find_highest_two_pair - Test 1')
 
+        # Test True
+        hole_cards = [f'9{H}', f'K{H}']
+        community_cards = [f'9{D}', f'K{S}', f'A{C}', f'A{S}', f'2{S}']
+        high_hand_list = [f'K{H}', f'K{S}', f'A{C}', f'A{S}']
+        player.set_all_cards(hole_cards=hole_cards, community_cards=community_cards)
+        self.assertTrue(player.all_cards_in_list(player.find_highest_two_pair(), high_hand_list),
+                        'Failed find_highest_two_pair - Test 2')
+
     def test_find_highest_pair(self):
         player = Player()
         # Test True
@@ -514,6 +558,13 @@ class RankerTester(unittest.TestCase):
         player.set_all_cards(hole_cards=hole_cards, community_cards=community_cards)
         self.assertTrue(player.all_cards_in_list(player.find_highest_pair(), high_hand_list),
                         'Failed find_highest_pair - Test 1')
+        # Test True
+        hole_cards = [f'9{H}', f'K{H}']
+        community_cards = [f'8{D}', f'8{S}', f'4{C}', f'3{S}', f'2{S}']
+        high_hand_list = [f'8{D}', f'8{S}']
+        player.set_all_cards(hole_cards=hole_cards, community_cards=community_cards)
+        self.assertTrue(player.all_cards_in_list(player.find_highest_pair(), high_hand_list),
+                        'Failed find_highest_pair - Test 2')
 
 
 # Run tests:
