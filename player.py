@@ -60,7 +60,6 @@ class Player(Rankinator):
         high_hole_card = self.convert_cards_to_integers(self.strip_suit(hole_cards))
         rank = max(high_hole_card)
         card = RANKS_MAP[rank]
-        print('::: set_Kicker :::')
         return card
 
     def get_best_hand_cards(self) -> list:

@@ -308,7 +308,7 @@ class RankerTester(unittest.TestCase):
         player.determine_highest_hand(cards_list)
         self.assertTrue(player.best_hand_name == 'Ace', "Failed determine_highest_hand - test 10")
 
-    def test_set_Kicker(self):
+    def test_get_Kicker(self):
         player = Player()
 
         # Test False: King and Ace in hand
