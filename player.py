@@ -13,7 +13,7 @@ class Player(Rankinator):
         self.hole_cards : list()
             Stores the hole cards. eg ['A♥', 'K♥']
         self.all_cards : dict()
-            Holds the hole cards and the community cards and their respective ranks. eg
+            Holds the hole cards and the community cards and their respective ranks for this player. eg
             {'K♥': 13, 'Q♥': 12, 'J♥': 11, 'T♥': 10, '9♠': 9, '2♠': 2, 'T♠': 10}
         self.best_hand_name = str()
             Holds the name of the best hand. eg 'Royal Flush'
