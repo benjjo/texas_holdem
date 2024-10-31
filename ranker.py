@@ -30,7 +30,7 @@ class Rankinator:
     def set_community_cards(self, cards_list: list) -> None:
         self.community_cards = cards_list
 
-    # Work functions
+    # Helper functions
     def strip_suit(self, card_list: list) -> list:
         """Helper function to Return a list of cards with the suit removed."""
         suits = [f'{H}', f'{D}', f'{S}', f'{C}']
@@ -41,15 +41,31 @@ class Rankinator:
         """Helper function to get the rank and suit from a card."""
         return card[:-1], card[-1]
 
-    def all_cards_in_list(self, list1, list2):
+    def all_cards_in_list(self, list1, list2) -> bool:
         """Helper method that checks whether every element from list1 is present in list2.
         It returns True if all elements of list1 are in list2 and False otherwise."""
         return all(card in list2 for card in list1)
+
+    def get_keys_with_matching_values(self, my_dict, target_list):
+        """Helper method: Get a key or list of keys from a dictionary, using a value or list of values.
+        Uses list comprehension to get keys where values match items in target_list"""
+        return [key for key, value in my_dict.items() if value in target_list]
 
     def filter_cards_by_suit(self, card_list: list, suit: str) -> list:
         # Returns a list of cards with the selected suit
         suited_cards = [card for card in card_list if card[-1] == suit]
         return suited_cards
+
+    def get_highest_card(self, card_list: list) -> int:
+        """Returns the highest card in a list of cards."""
+        # Step 1: Strip the suits from the card list
+        stripped_cards = self.strip_suit(card_list)
+
+        # Step 2: Convert stripped cards to integer values
+        int_cards = self.convert_cards_to_integers(stripped_cards)
+
+        # Step 3: Return the highest integer (card) in the list
+        return max(int_cards) if int_cards else None
 
     def convert_cards_to_integers(self, cards_list: list) -> list:
         """cards must be a list that has been stripped of the suit.

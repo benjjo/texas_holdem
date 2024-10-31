@@ -19,11 +19,13 @@ class Player(Rankinator):
             Holds the name of the best hand. eg 'Royal Flush'
         self.player_ranking : dict()
             Holds the ranking information associated with this players hand.
-            {'Player_Name': [int(Hand Rank), int(Kicker)]}
+            {'Player_Name': [ [str, int, int], [int, int] ]}
+            {'Player_Name': [ ['Hand Name', int(hand rank), int(high hand card rank)], [int(kicker1), int(kicker2)] ]}
 
     """
-    def __init__(self):
+    def __init__(self, player_name: str):
         super().__init__()
+        self.player_name = player_name
         self.best_hand_and_kicker = tuple()
         self.hole_cards = list()
         self.all_cards = dict()
@@ -46,6 +48,14 @@ class Player(Rankinator):
         for key in full_card_list:
             self.all_cards.update({key: CARDS_MAP.get(key[0][0])})
 
+    def set_player_ranking(self, hand_cards: list) -> None:
+        # 'Player_Name': [ ['Hand Name', int(hand rank), int(high hand card rank)], [int(kicker1), int(kicker2)] ]}
+        hand_name = self.best_hand_name
+        hand_rank = HANDS_MAP.get(hand_name)
+        high_hand_card_rank = self.get_highest_card(self.best_hand_and_kicker[0])
+        high_kicker = self.get_highest_card(self.hole_cards)
+        pass
+
     def get_cards_from_values(self, cards_list: list) -> list:
         # self.all_cards must be already set
         list_of_cards = list()
@@ -53,6 +63,9 @@ class Player(Rankinator):
             list_of_cards.append(list(self.all_cards.keys())[list(self.all_cards.values()).index(value)])
 
         return list_of_cards
+
+    def set_player_name(self, name: str) -> None:
+        self.player_name = name
 
     # Tools
     def get_Kicker(self, hole_cards: list) -> str:
