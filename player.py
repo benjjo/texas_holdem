@@ -43,6 +43,10 @@ class Player(Rankinator):
         self.best_hand_and_kicker = (hand_cards, kicker)
 
     def set_all_cards(self, hole_cards: list, community_cards: list) -> None:
+        """Updates self.all_cards:
+            hole_cards = [f'9{H}', f'K{H}']
+            community_cards = [f'9{D}', f'Q{S}', f'4{C}', f'3{S}', f'2{S}']
+                i.e. {'9♥': 9, 'K♥': 13, '9♦': 9, 'Q♠': 12, '4♣': 4, '3♠': 3, '2♠': 2}"""
         full_card_list = hole_cards + community_cards
         self.all_cards.clear()
         for key in full_card_list:
@@ -52,9 +56,14 @@ class Player(Rankinator):
         # 'Player_Name': [ ['Hand Name', int(hand rank), int(high hand card rank)], [int(kicker1), int(kicker2)] ]}
         hand_name = self.best_hand_name
         hand_rank = HANDS_MAP.get(hand_name)
+        print(self.best_hand_and_kicker)
         high_hand_card_rank = self.get_highest_card(self.best_hand_and_kicker[0])
-        high_kicker = self.get_highest_card(self.hole_cards)
-        pass
+        hole_cards = hand_cards[0:1]
+        kickers = self.get_Kicker(hole_cards=hole_cards)
+        self.player_ranking = {
+            self.player_name:   [[self.best_hand_name, hand_rank, high_hand_card_rank],
+                                 [kickers[0], kickers[1]]]
+        }
 
     def get_cards_from_values(self, cards_list: list) -> list:
         # self.all_cards must be already set
@@ -68,11 +77,15 @@ class Player(Rankinator):
         self.player_name = name
 
     # Tools
-    def get_Kicker(self, hole_cards: list) -> str:
+    def get_Kicker(self, hole_cards: list) -> list:
+        """Returns the hole cards as a string name in order of rank.
+        [f'K♥', f'A♥'] will return ['Ace', 'King']"""
         high_hole_card = self.convert_cards_to_integers(self.strip_suit(hole_cards))
-        rank = max(high_hole_card)
-        card = RANKS_MAP[rank]
-        return card
+        rank = sorted(high_hole_card)
+        cards = list()
+        cards.append(RANKS_MAP[rank.pop()])
+        cards.append(RANKS_MAP[rank.pop()])
+        return cards
 
     def get_best_hand_cards(self) -> list:
         return self.best_hand_and_kicker[0]
@@ -108,12 +121,12 @@ class Player(Rankinator):
             if func(card_list):  # Call each function and check if it returns True
                 self.set_best_hand_name(func.__name__.replace('_', " "))
                 best_hand = map_hand_to_function.get(func.__name__)
-                kicker = self.get_Kicker(hole_cards)
+                kicker = self.get_Kicker(hole_cards)[0]
                 self.set_best_hand_and_kicker(best_hand, kicker)
                 return None
 
         # No hand matched so the kicker is set to the hand name
-        kicker = self.get_Kicker(hole_cards)
+        kicker = self.get_Kicker(hole_cards)[0]
         self.set_best_hand_and_kicker([kicker], kicker)
         self.set_best_hand_name(kicker)
 
