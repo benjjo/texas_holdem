@@ -356,52 +356,62 @@ class RankerTester(unittest.TestCase):
         # Test True: Royal flush in hand
         cards_list = [f'A{H}', f'K{H}', f'Q{H}', f'J{H}', f'T{H}', f'9{S}', f'2{S}']
         player.find_highest_ranked_hand(cards_list)
-        self.assertTrue(player.best_hand_name == 'Royal Flush', "Failed determine_highest_hand - test 1")
+        self.assertTrue(player.best_hand_name == 'Royal Flush',
+                        "Failed determine_highest_hand - test 1")
 
         # Test True: Straight flush in hand
         cards_list = [f'5{H}', f'4{H}', f'6{H}', f'7{H}', f'8{H}', f'9{S}', f'2{S}']
         player.find_highest_ranked_hand(cards_list)
-        self.assertTrue(player.best_hand_name == 'Straight Flush', "Failed determine_highest_hand - test 2")
+        self.assertTrue(player.best_hand_name == 'Straight Flush',
+                        "Failed determine_highest_hand - test 2")
 
         # Test True: Four of a kind in hand
         cards_list = [f'A{H}', f'A{D}', f'A{S}', f'A{C}', f'T{H}', f'9{S}', f'2{S}']
         player.find_highest_ranked_hand(cards_list)
-        self.assertTrue(player.best_hand_name == 'Four of a Kind', "Failed determine_highest_hand - test 3")
+        self.assertTrue(player.best_hand_name == 'Four of a Kind',
+                        "Failed determine_highest_hand - test 3")
 
         # Test True: full house in hand
         cards_list = [f'A{H}', f'A{D}', f'A{S}', f'T{D}', f'T{H}', f'9{S}', f'2{S}']
         player.find_highest_ranked_hand(cards_list)
-        self.assertTrue(player.best_hand_name == 'Full House', "Failed determine_highest_hand - test 4")
+        self.assertTrue(player.best_hand_name == 'Full House',
+                        "Failed determine_highest_hand - test 4")
 
         # Test True: flush in hand
         cards_list = [f'A{H}', f'9{H}', f'2{H}', f'J{H}', f'T{H}', f'9{S}', f'2{S}']
         player.find_highest_ranked_hand(cards_list)
-        self.assertTrue(player.best_hand_name == 'Flush', "Failed determine_highest_hand - test 5")
+        self.assertTrue(player.best_hand_name == 'Flush',
+                        "Failed determine_highest_hand - test 5")
 
         # Test True: Straight in hand
         cards_list = [f'3{D}', f'4{C}', f'5{H}', f'6{H}', f'7{H}', f'8{S}', f'2{S}']
         player.find_highest_ranked_hand(cards_list)
-        self.assertTrue(player.best_hand_name == 'Straight', "Failed determine_highest_hand - test 6")
+        self.assertTrue(player.best_hand_name == 'Straight',
+                        "Failed determine_highest_hand - test 6")
 
         # Test True: Three of a kind in hand
         cards_list = [f'A{H}', f'A{D}', f'A{S}', f'J{H}', f'T{H}', f'9{S}', f'2{S}']
         player.find_highest_ranked_hand(cards_list)
-        self.assertTrue(player.best_hand_name == 'Three of a Kind', "Failed determine_highest_hand - test 7")
+        self.assertTrue(player.best_hand_name == 'Three of a Kind',
+                        "Failed determine_highest_hand - test 7")
 
         # Test True: Two Pair in hand
         cards_list = [f'A{H}', f'A{D}', f'J{S}', f'J{H}', f'T{H}', f'9{S}', f'2{S}']
         player.find_highest_ranked_hand(cards_list)
-        self.assertTrue(player.best_hand_name == 'Two Pair', "Failed determine_highest_hand - test 8")
+        self.assertTrue(player.best_hand_name == 'Two Pair',
+                        "Failed determine_highest_hand - test 8")
 
         # Test True: Three of a kind in hand
         cards_list = [f'A{H}', f'A{D}', f'4{S}', f'J{H}', f'7{H}', f'9{S}', f'2{S}']
         player.find_highest_ranked_hand(cards_list)
-        self.assertTrue(player.best_hand_name == 'One Pair', "Failed determine_highest_hand - test 9")
+        self.assertTrue(player.best_hand_name == 'One Pair',
+                        "Failed determine_highest_hand - test 9")
 
         # Test False: Kicker card and False hand match
         cards_list = [f'Q{H}', f'A{D}', f'J{S}', f'9{H}', f'7{H}', f'5{S}', f'2{S}']
         player.find_highest_ranked_hand(cards_list)
-        self.assertTrue(player.best_hand_name == 'Ace', "Failed determine_highest_hand - test 10")
+        self.assertTrue(player.best_hand_name == 'Ace',
+                        "Failed determine_highest_hand - test 10")
 
     def test_find_royal_flush(self):
         player = Player(player_name='Player 1')
@@ -566,6 +576,21 @@ class RankerTester(unittest.TestCase):
         self.assertTrue(player.all_cards_in_list(player.find_highest_pair(), high_hand_list),
                         'Failed find_highest_pair - Test 2')
 
+    def test_get_highest_card(self):
+        rankinator = Rankinator()
+
+        # Test True
+        high_card = rankinator.get_highest_card(card_list=[f'T{C}', f'K{S}'])
+        self.assertTrue(high_card == 13, "Failed get_highest_card, test 1")
+
+        # Test True
+        high_card = rankinator.get_highest_card(card_list=[f'T{C}', f'A{S}'])
+        self.assertTrue(high_card == 14, "Failed get_highest_card, test 2")
+
+        # Test True
+        high_card = rankinator.get_highest_card(card_list=[f'K{C}', f'K{S}'])
+        self.assertTrue(high_card == 13, "Failed get_highest_card, test 3")
+
     def test_set_player_ranking(self):
         player = Player(player_name='Player 1')
         player_name = 'Player 1'
@@ -575,18 +600,13 @@ class RankerTester(unittest.TestCase):
 
         # Set all_cards to {'9♥': 9, 'K♥': 13, '9♦': 9, 'Q♠': 12, '4♣': 4, '3♠': 3, '2♠': 2}
         player.set_all_cards(hole_cards=hole_cards, community_cards=community_cards)
-
-        player.set_best_hand_and_kicker()
-
+        player.find_highest_ranked_hand(card_list=community_cards, hole_cards=hole_cards)
         # Set player ranking to: {'Player 1': [ ['One Pair', 15, 9], [13, 9] ]}
         player.set_player_ranking(hand_cards=hand_cards)
-        best_hand_cards = [f'9{H}', f'9{D}']
-        kicker_high_card = [f'K{H}']
-        kicker_low_card = [f'9{H}']
-        hand_name = player_name
 
         # Test True
-        self.assertTrue(1, 1, 'Failed set_player_ranking - Test 1')
+        self.assertTrue(player.player_ranking.get(player_name) == [['One Pair', 15, 9], [13, 9]],
+                        'Failed set_player_ranking - Test 1')
 
 
 # Run tests:

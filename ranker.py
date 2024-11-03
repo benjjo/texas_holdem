@@ -57,7 +57,8 @@ class Rankinator:
         return suited_cards
 
     def get_highest_card(self, card_list: list) -> int:
-        """Returns the highest card in a list of cards."""
+        """Returns the highest card value in a list of cards.
+            [f'2{H}', f'5{D}', f'8{S}', f'T{C}', f'K{S}'] will return 13"""
         # Step 1: Strip the suits from the card list
         stripped_cards = self.strip_suit(card_list)
 
