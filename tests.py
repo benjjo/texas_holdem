@@ -1,6 +1,7 @@
 from bookie import *
 from player import *
 from dealer import *
+from adjudicator import *
 import unittest
 from collections import Counter
 
@@ -112,6 +113,9 @@ class HoldemTester(unittest.TestCase):
 
     # Test the Ranker class
     def test_set_community_cards(self):
+        # reset_community_cards
+        # update_community_cards
+
         ranker = Rankinator()
         cards = [f'2{H}', f'5{D}', f'8{S}']
         ranker.update_community_cards(cards)
@@ -437,6 +441,12 @@ class HoldemTester(unittest.TestCase):
         cards_list = [f'3{H}', f'3{D}', f'T{H}', f'T{S}', f'K{S}']
         self.assertFalse(rank.One_Pair(cards_list), "Failed check_One_Pair - test 3")
 
+    def test_High_Card(self):
+        rank = Rankinator()
+
+        # Test True: One pair present in list
+        self.assertTrue(rank.High_Card([]), "Failed High_Card - test 1")
+
     # Test player class
     def test_set_hole_cards(self):
         player1 = Player(player_name='Player 1')
@@ -534,6 +544,27 @@ class HoldemTester(unittest.TestCase):
         # Test True
         self.assertTrue(player1.player_name == player_name,
                         'Failed test_set_player_name - Test 1')
+
+    def test_set_ace_high(self):
+        player_name = 'Player 1'
+        player1 = Player(player_name=player_name)
+        # Test True
+        player1.set_best_hand_name('Flush')
+        self.assertTrue(player1.ace_high,
+                        'Failed test_set_ace_high - Test 1')
+        player1.set_best_hand_name('Straight')
+        self.assertFalse(player1.ace_high,
+                         'Failed test_set_ace_high - Test 2')
+
+    def test_set_player_score(self):
+        player_name = 'Player 1'
+        player1 = Player(player_name=player_name)
+        player1.set_player_score(100)
+        # Test True
+        self.assertTrue(isinstance(player1.player_score, int),
+                        'Failed test_set_player_score - Test 1')
+        self.assertTrue(player1.player_score == 100,
+                        'Failed test_set_player_score - Test 2')
 
     def test_get_Kicker(self):
         player = Player(player_name='Player 1')
@@ -773,6 +804,23 @@ class HoldemTester(unittest.TestCase):
         self.assertTrue(player.all_cards_in_list(player.find_highest_two_pair(), high_hand_list),
                         'Failed find_highest_two_pair - Test 2')
 
+    def test_find_highest_pair(self):
+        player = Player(player_name='Player 1')
+        # Test True
+        hole_cards = [f'9{H}', f'K{H}']
+        community_cards = [f'9{D}', f'Q{S}', f'4{C}', f'3{S}', f'2{S}']
+        high_hand_list = [f'9{H}', f'9{D}']
+        player.set_all_cards(hole_cards=hole_cards, community_cards=community_cards)
+        self.assertTrue(player.all_cards_in_list(player.find_highest_pair(), high_hand_list),
+                        'Failed find_highest_pair - Test 1')
+        # Test True
+        hole_cards = [f'9{H}', f'K{H}']
+        community_cards = [f'8{D}', f'8{S}', f'4{C}', f'3{S}', f'2{S}']
+        high_hand_list = [f'8{D}', f'8{S}']
+        player.set_all_cards(hole_cards=hole_cards, community_cards=community_cards)
+        self.assertTrue(player.all_cards_in_list(player.find_highest_pair(), high_hand_list),
+                        'Failed find_highest_pair - Test 2')
+
     def test_find_high_cards(self):
         player = Player(player_name='Player 1')
 
@@ -809,23 +857,6 @@ class HoldemTester(unittest.TestCase):
         player.set_best_hand_name('Straight')
         self.assertTrue(player.tally_cards_score(hand_5) == 15,
                         "Failed tally_cards_score, test 5")
-
-    def test_find_highest_pair(self):
-        player = Player(player_name='Player 1')
-        # Test True
-        hole_cards = [f'9{H}', f'K{H}']
-        community_cards = [f'9{D}', f'Q{S}', f'4{C}', f'3{S}', f'2{S}']
-        high_hand_list = [f'9{H}', f'9{D}']
-        player.set_all_cards(hole_cards=hole_cards, community_cards=community_cards)
-        self.assertTrue(player.all_cards_in_list(player.find_highest_pair(), high_hand_list),
-                        'Failed find_highest_pair - Test 1')
-        # Test True
-        hole_cards = [f'9{H}', f'K{H}']
-        community_cards = [f'8{D}', f'8{S}', f'4{C}', f'3{S}', f'2{S}']
-        high_hand_list = [f'8{D}', f'8{S}']
-        player.set_all_cards(hole_cards=hole_cards, community_cards=community_cards)
-        self.assertTrue(player.all_cards_in_list(player.find_highest_pair(), high_hand_list),
-                        'Failed find_highest_pair - Test 2')
 
     def test_score_the_hand(self):
         player = Player(player_name='Player 1')
@@ -869,6 +900,24 @@ class HoldemTester(unittest.TestCase):
         # Test True: A -> A will yield 85
         win_tup = [f'A', f'A']
         self.assertTrue(bookmaker.get_winning_percentage(win_tup) == 85, 'Failed get_winning_percentage - test 6')
+
+    # Test the Adjudicator class
+    def test_comparitor(self):
+        player1 = Player(player_name="Alice")
+        player1.set_player_score(80)
+        player2 = Player(player_name="Bob")
+        player2.set_player_score(65)
+        player3 = Player(player_name="Charlie")
+        player3.set_player_score(50)
+
+        rankings = Adjudicator.comparitor([player1, player2, player3])
+
+        self.assertTrue(rankings.get(1) == "Alice",
+                        "Failed test_comparitor - test 1")
+        self.assertTrue(rankings.get(2) == "Bob",
+                        "Failed test_comparitor - test 2")
+        self.assertTrue(rankings.get(3) == "Charlie",
+                        "Failed test_comparitor - test 3")
 
 
 # Run tests:

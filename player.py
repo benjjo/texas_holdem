@@ -84,6 +84,9 @@ class Player(Rankinator):
         else:
             self.ace_high = True
 
+    def set_player_score(self, score: int) -> None:
+        self.player_score = score
+
     # Tools
     def get_Kicker(self, hole_cards: list) -> list:
         """Returns the hole cards as a dictionary of 'name':value in order of rank.

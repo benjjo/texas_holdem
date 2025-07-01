@@ -171,5 +171,5 @@ class Rankinator:
         return len(one_pair) == 1
 
     def High_Card(self, cards_list: list) -> bool:
-
+        # Defaults to High_Card. Placeholder method.
         return True
