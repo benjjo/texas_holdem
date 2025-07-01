@@ -20,15 +20,23 @@ class Rankinator:
             A list of the integer ranks of all cards.
         self.best_hand : string
             The name of the best hand that the player holds
-        self.best_hand_rank :  integer
+        self.best_hand_score :  integer
             Used to compare two hands by the Adjudicator class
         self.kicker_rank :  integer
             The rank of the kicker card held by the player
         """
         self.community_cards = list()
+        self.best_hand_score = int()
+        self.ace_high = bool()
 
-    def set_community_cards(self, cards_list: list) -> None:
-        self.community_cards = cards_list
+    def reset_community_cards(self):
+        self.community_cards = list()
+
+    def update_community_cards(self, cards_list: list) -> None:
+        self.community_cards += cards_list
+
+    def set_best_hand_score(self, score: int) -> None:
+        self.best_hand_score = score
 
     # Helper functions
     def strip_suit(self, card_list: list) -> list:
@@ -39,14 +47,16 @@ class Rankinator:
 
     def get_rank_and_suit(self, card: str) -> tuple:
         """Helper function to get the rank and suit from a card."""
-        return card[:-1], card[-1]
+        return tuple([card[0], card[-1]])
 
-    def all_cards_in_list(self, list1, list2) -> bool:
+    def all_cards_in_list(self, list1: list, list2: list) -> bool:
         """Helper method that checks whether every element from list1 is present in list2.
+        list1 = list containing the items to check.
+        list2 = list with the items to be checked against.
         It returns True if all elements of list1 are in list2 and False otherwise."""
         return all(card in list2 for card in list1)
 
-    def get_keys_with_matching_values(self, my_dict, target_list):
+    def get_keys_with_matching_values(self, my_dict: dict, target_list: list) -> list:
         """Helper method: Get a key or list of keys from a dictionary, using a value or list of values.
         Uses list comprehension to get keys where values match items in target_list"""
         return [key for key, value in my_dict.items() if value in target_list]
@@ -81,6 +91,15 @@ class Rankinator:
         int_list = [int(x) for x in cards_list]
         int_list.sort()
         return list(set(int_list))
+
+    def convert_card_to_integer(self, card: str) -> int:
+        """Returns the value of the card in terms of a ranked integer. In the case that
+        Ace refers to a low straight usage (ace_high == False), the value is 1. """
+        substitutions = {'T': 10, 'J': 11, 'Q': 12, 'K': 13, 'A': 14, 'AL': 1}
+        if 'A' in card and not self.ace_high:
+            card = card.replace('A', 'AL')
+        card = substitutions.get(card[:-1], card[:-1])
+        return int(card)
 
     # hole_cards evaluators
     def Royal_Flush(self, cards_list: list) -> bool:
@@ -139,14 +158,18 @@ class Rankinator:
 
     def Two_Pair(self, cards_list: list) -> bool:
         # Creates a list with the pairs. Checks list for length of 2 or better.3
-        cards_list = self.strip_suit(card_list=cards_list)
+        cards_list = self.strip_suit(cards_list)
         count = Counter(cards_list)
         two_pairs = [item for item, count in count.items() if count == 2]
         return len(two_pairs) >= 2
 
     def One_Pair(self, cards_list: list) -> bool:
         # Creates a list with the pairs. Checks list for length of 1
-        cards_list = self.strip_suit(card_list=cards_list)
+        cards_list = self.strip_suit(cards_list)
         count = Counter(cards_list)
         one_pair = [item for item, count in count.items() if count == 2]
         return len(one_pair) == 1
+
+    def High_Card(self, cards_list: list) -> bool:
+
+        return True

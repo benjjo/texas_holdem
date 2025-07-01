@@ -31,13 +31,15 @@ class Player(Rankinator):
         self.all_cards = dict()
         self.best_hand_name = str()
         self.player_ranking = dict()
+        self.player_score = int()
 
     # Setters and getters
     def set_hole_cards(self, cards_list: list) -> None:
         self.hole_cards = cards_list
 
-    def set_best_hand_name(self, name: str):
+    def set_best_hand_name(self, name: str) -> None:
         self.best_hand_name = name
+        self.set_ace_high()
 
     def set_best_hand_and_kicker(self, hand_cards: list, kicker: str) -> None:
         # Accepts the best five cards list and a kicker string.
@@ -76,6 +78,12 @@ class Player(Rankinator):
     def set_player_name(self, name: str) -> None:
         self.player_name = name
 
+    def set_ace_high(self):
+        if self.best_hand_name in ['Straight_Flush', 'Straight']:
+            self.ace_high = False
+        else:
+            self.ace_high = True
+
     # Tools
     def get_Kicker(self, hole_cards: list) -> list:
         """Returns the hole cards as a dictionary of 'name':value in order of rank.
@@ -107,7 +115,8 @@ class Player(Rankinator):
                                 'Straight': self.find_highest_straight(),
                                 'Three_of_a_Kind': self.find_highest_three_of_a_kind(),
                                 'Two_Pair': self.find_highest_two_pair(),
-                                'One_Pair': self.find_highest_pair()}
+                                'One_Pair': self.find_highest_pair(),
+                                'High_Card': self.find_high_cards()}
 
         functions = [self.Royal_Flush,
                      self.Straight_Flush,
@@ -117,7 +126,8 @@ class Player(Rankinator):
                      self.Straight,
                      self.Three_of_a_Kind,
                      self.Two_Pair,
-                     self.One_Pair]
+                     self.One_Pair,
+                     self.High_Card]
 
         for func in functions:
             if func(card_list):  # Call each function and check if it returns True
@@ -357,3 +367,33 @@ class Player(Rankinator):
         highest_pair_cards = [card for card, rank in self.all_cards.items() if rank == highest_pair_rank]
 
         return highest_pair_cards
+
+    def find_high_cards(self) -> list:
+        # Find the top 5 cards
+        # Sort dictionary items by rank (value), descending
+        sorted_cards = sorted(self.all_cards.items(), key=lambda item: item[1], reverse=True)
+        highest_cards = [card for card, _ in sorted_cards[:5]]
+
+        return highest_cards
+
+    def tally_cards_score(self, cards_list: list) -> int:
+        score_tally = 0
+        for card in cards_list:
+            score_tally += self.convert_card_to_integer(card)
+        return score_tally
+
+    def score_the_hand(self, hand_cards: list) -> int:
+        score_total = 0
+        base_score = {'Royal_Flush': 10000,
+                      'Straight_Flush': 9000,
+                      'Four_of_a_Kind': 8000,
+                      'Full_House': 7000,
+                      'Flush': 6000,
+                      'Straight': 5000,
+                      'Three_of_a_Kind': 4000,
+                      'Two_Pair': 3000,
+                      'One_Pair': 2000}
+        score_total += base_score.get(self.best_hand_name)
+        score_total += self.tally_cards_score(hand_cards)
+        return score_total
+
