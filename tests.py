@@ -104,6 +104,33 @@ class HoldemTester(unittest.TestCase):
         self.assertTrue(CARDS_MAP.get('2') == 2, "Failed test_CARDS_MAP - Test 13")
 
     # Test dealer class
+    def test_setters_and_getters(self):
+        new_dealer = Dealer()
+        flop_cards = [f'T{D}', '5{H}', '6{S}']
+        turn_card = f'T{H}'
+        river_card = f'A{D}'
+        burners = [f'T{C}', '5{C}', '6{C}']
+
+        # Setters
+        new_dealer.set_flop(flop_cards.pop())
+        new_dealer.set_flop(flop_cards.pop())
+        new_dealer.set_flop(flop_cards.pop())
+        new_dealer.set_turn(turn_card)
+        new_dealer.set_river(river_card)
+        new_dealer.set_burner(burners.pop())
+        new_dealer.set_burner(burners.pop())
+        new_dealer.set_burner(burners.pop())
+
+        # Test True
+        self.assertTrue(Counter(new_dealer.get_flop()) == Counter([f'T{D}', '5{H}', '6{S}']),
+                        "Failed test_setters_and_getters - test 1")
+        self.assertTrue(new_dealer.get_turn() == turn_card,
+                        "Failed test_setters_and_getters - test 2")
+        self.assertTrue(new_dealer.get_river() == river_card,
+                        "Failed test_setters_and_getters - test 3")
+        self.assertTrue(Counter(new_dealer.get_burners()) == Counter([f'T{C}', '5{C}', '6{C}']),
+                        "Failed test_setters_and_getters - test 4")
+
     def test_shuffle_deck(self):
         dealer = Dealer()
         sorted_deck = DECK.copy()
@@ -111,6 +138,9 @@ class HoldemTester(unittest.TestCase):
         self.assertTrue(shuffled_deck != sorted_deck and
                         shuffled_deck != sorted_deck[::-1],
                         "Failed test_shuffle_deck - test 1")
+
+    def test_deal_out_cards(self):
+        pass
 
     # Test the Ranker class
     def test_set_community_cards(self):
@@ -449,13 +479,19 @@ class HoldemTester(unittest.TestCase):
         self.assertTrue(rank.High_Card([]), "Failed High_Card - test 1")
 
     # Test player class
-    def test_set_hole_cards(self):
+    def test_set_pocket_card(self):
         player1 = Player(player_name='Player 1')
-        hole_cards = [f'9{H}', f'K{H}']
-        player1.set_hole_cards(hole_cards)
+        card1 = f'9{H}'
+        card2 = f'K{H}'
+        player1.set_pocket_card(card1)
+        player1.set_pocket_card(card2)
         # Test True
-        self.assertListEqual(player1._hole_cards, hole_cards,
-                             'Failed test_set_hole_cards - Test 1')
+        self.assertTrue(card1 in player1._pocket_cards,
+                        'Failed set_pocket_card - Test 1')
+        self.assertTrue(card2 in player1._pocket_cards,
+                        'Failed set_pocket_card - Test 2')
+        self.assertTrue(len(player1._pocket_cards) == 2,
+                        'Failed set_pocket_card - Test 3')
 
     def test_set_best_hand_name(self):
         player1 = Player(player_name='Player 1')
@@ -598,8 +634,10 @@ class HoldemTester(unittest.TestCase):
 
     def test_get_hole_cards(self):
         player = Player(player_name='Player 1')
-        player.set_hole_cards([f'A{H}', f'K{H}'])
-        self.assertTrue(player.get_hole_cards() == [f'A{H}', f'K{H}'], "Failed get_hole_cards - test 1")
+        player.set_pocket_card(f'A{H}')
+        player.set_pocket_card(f'K{H}')
+        self.assertTrue(Counter(player.get_hole_cards()) == Counter([f'A{H}', f'K{H}']),
+                        "Failed get_hole_cards - test 1")
 
     def test_get_all_cards(self):
         player = Player(player_name='Player 1')

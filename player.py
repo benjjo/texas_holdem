@@ -27,7 +27,7 @@ class Player(Rankinator):
         super().__init__()
         self.player_name = player_name
         self._best_hand_and_kicker = tuple()
-        self._hole_cards = list()
+        self._pocket_cards = list()
         self._all_cards = dict()
         self._best_hand_name = str()
         self._player_ranking = dict()
@@ -37,8 +37,9 @@ class Player(Rankinator):
         return f"Player({self.player_name}, Score: {self._player_score})"
 
     # Setters and getters
-    def set_hole_cards(self, cards_list: list) -> None:
-        self._hole_cards = cards_list
+    def set_pocket_card(self, card: str) -> None:
+        # Updates the pocket cards one card at a time.
+        self._pocket_cards.append(card)
 
     def set_best_hand_name(self, name: str) -> None:
         self._best_hand_name = name
@@ -111,7 +112,7 @@ class Player(Rankinator):
         return self._best_hand_and_kicker[0]
 
     def get_hole_cards(self) -> list:
-        return self._hole_cards
+        return self._pocket_cards
 
     def get_all_cards(self) -> dict:
         return self._all_cards
