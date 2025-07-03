@@ -2,6 +2,7 @@ from bookie import *
 from player import *
 from dealer import *
 from adjudicator import *
+from game_manager import *
 import unittest
 from collections import Counter
 
@@ -187,12 +188,12 @@ class HoldemTester(unittest.TestCase):
 
     def test_get_keys_with_matching_values(self):
         ranker = Rankinator()
-        dict_1 = {f'2{D}':2, f'3{S}':3, f'4{C}':4}
-        list_1 = [2,3,4]
+        dict_1 = {f'2{D}': 2, f'3{S}': 3, f'4{C}': 4}
+        list_1 = [2, 3, 4]
         list_1_out = [f'2{D}', f'3{S}', f'4{C}']
-        list_2 = [2,3,5]
+        list_2 = [2, 3, 5]
         list_2_out = [f'2{D}', f'3{S}']
-        list_3 = [5,6,7]
+        list_3 = [5, 6, 7]
         list_3_out = []
         self.assertListEqual(ranker.get_keys_with_matching_values(dict_1, list_1), list_1_out,
                              "Failed test_get_keys_with_matching_values - Test 1")
@@ -453,20 +454,20 @@ class HoldemTester(unittest.TestCase):
         hole_cards = [f'9{H}', f'K{H}']
         player1.set_hole_cards(hole_cards)
         # Test True
-        self.assertListEqual(player1.hole_cards, hole_cards,
+        self.assertListEqual(player1._hole_cards, hole_cards,
                              'Failed test_set_hole_cards - Test 1')
 
     def test_set_best_hand_name(self):
         player1 = Player(player_name='Player 1')
         player1.set_best_hand_name('Flush')
         # Test True
-        self.assertTrue(player1.best_hand_name == 'Flush',
+        self.assertTrue(player1._best_hand_name == 'Flush',
                         'Failed test_set_best_hand_name - Test 1')
         self.assertTrue(player1.ace_high,
                         'Failed test_set_best_hand_name - Test 2')
 
         player1.set_best_hand_name('Straight')
-        self.assertTrue(player1.best_hand_name == 'Straight',
+        self.assertTrue(player1._best_hand_name == 'Straight',
                         'Failed test_set_best_hand_name - Test 3')
         # Test False
         self.assertFalse(player1.ace_high,
@@ -481,7 +482,7 @@ class HoldemTester(unittest.TestCase):
         player.set_best_hand_and_kicker(hand, kicker)
         self.assertListEqual(player.get_best_hand_cards(), hand,
                              'Failed set_best_hand_cards - test 1')
-        self.assertTrue(player.best_hand_and_kicker[1] == kicker,
+        self.assertTrue(player._best_hand_and_kicker[1] == kicker,
                         'Failed set_best_hand_cards - test 2')
 
     def test_set_all_cards(self):
@@ -491,16 +492,16 @@ class HoldemTester(unittest.TestCase):
         hole_cards: list[str] = [f'K{H}', f'Q{H}']
         community_cards_list: list[str] = [f'J{H}', f'T{H}', f'9{S}', f'2{S}', f'T{S}']
         player.set_all_cards(hole_cards, community_cards_list)
-        self.assertTrue(player.all_cards.get(f'K{H}') == 13, 'Failed set_all_cards - test 1')
-        self.assertTrue(player.all_cards.get(f'Q{H}') == 12, 'Failed set_all_cards - test 2')
-        self.assertTrue(player.all_cards.get(f'J{H}') == 11, 'Failed set_all_cards - test 3')
-        self.assertTrue(player.all_cards.get(f'T{H}') == 10, 'Failed set_all_cards - test 4')
-        self.assertTrue(player.all_cards.get(f'9{S}') == 9, 'Failed set_all_cards - test 5')
-        self.assertTrue(player.all_cards.get(f'2{S}') == 2, 'Failed set_all_cards - test 6')
+        self.assertTrue(player._all_cards.get(f'K{H}') == 13, 'Failed set_all_cards - test 1')
+        self.assertTrue(player._all_cards.get(f'Q{H}') == 12, 'Failed set_all_cards - test 2')
+        self.assertTrue(player._all_cards.get(f'J{H}') == 11, 'Failed set_all_cards - test 3')
+        self.assertTrue(player._all_cards.get(f'T{H}') == 10, 'Failed set_all_cards - test 4')
+        self.assertTrue(player._all_cards.get(f'9{S}') == 9, 'Failed set_all_cards - test 5')
+        self.assertTrue(player._all_cards.get(f'2{S}') == 2, 'Failed set_all_cards - test 6')
         # Introduce an Ace
         hole_cards: list[str] = [f'A{H}', f'Q{H}']
         player.set_all_cards(hole_cards, community_cards_list)
-        self.assertTrue(player.all_cards.get(f'A{H}') == 14, 'Failed set_all_cards - test 7')
+        self.assertTrue(player._all_cards.get(f'A{H}') == 14, 'Failed set_all_cards - test 7')
 
     def test_set_player_ranking(self):
         player = Player(player_name='Player 1')
@@ -516,7 +517,7 @@ class HoldemTester(unittest.TestCase):
         player.set_player_ranking(hand_cards=hand_cards)
 
         # Test True
-        self.assertTrue(player.player_ranking.get(player_name) == [['One Pair', 15, 9], [13, 9]],
+        self.assertTrue(player._player_ranking.get(player_name) == [['One Pair', 15, 9], [13, 9]],
                         'Failed set_player_ranking - Test 1')
 
     def test_get_cards_from_values(self):
@@ -561,9 +562,9 @@ class HoldemTester(unittest.TestCase):
         player1 = Player(player_name=player_name)
         player1.set_player_score(100)
         # Test True
-        self.assertTrue(isinstance(player1.player_score, int),
+        self.assertTrue(isinstance(player1._player_score, int),
                         'Failed test_set_player_score - Test 1')
-        self.assertTrue(player1.player_score == 100,
+        self.assertTrue(player1._player_score == 100,
                         'Failed test_set_player_score - Test 2')
 
     def test_get_Kicker(self):
@@ -595,67 +596,108 @@ class HoldemTester(unittest.TestCase):
         self.assertListEqual(player.get_best_hand_cards(), [f'A{H}', f'K{H}', f'Q{H}', f'J{H}', f'T{H}'],
                              "Failed test_get_best_hand_cards - test 1")
 
+    def test_get_hole_cards(self):
+        player = Player(player_name='Player 1')
+        player.set_hole_cards([f'A{H}', f'K{H}'])
+        self.assertTrue(player.get_hole_cards() == [f'A{H}', f'K{H}'], "Failed get_hole_cards - test 1")
+
+    def test_get_all_cards(self):
+        player = Player(player_name='Player 1')
+        hole_cards = [f'9{H}', f'K{H}']
+        community_cards = [f'9{D}', f'Q{S}', f'4{C}', f'3{S}', f'2{S}']
+        all_cards = {'9♥': 9, 'K♥': 13, '9♦': 9, 'Q♠': 12, '4♣': 4, '3♠': 3, '2♠': 2}
+        player.set_all_cards(hole_cards, community_cards)
+        self.assertTrue(player.get_all_cards() == all_cards, "Failed get_all_cards - test 1")
+
+    def test_get_best_hand_name(self):
+        player = Player(player_name='Player 1')
+        hole_cards = [f'9{H}', f'K{H}']
+        community_cards = [f'9{D}', f'Q{S}', f'4{C}', f'3{S}', f'2{S}']
+        hand_cards = hole_cards + community_cards
+
+        player.set_all_cards(hole_cards=hole_cards, community_cards=community_cards)
+        player.find_highest_ranked_hand(card_list=community_cards, hole_cards=hole_cards)
+        player.set_player_ranking(hand_cards=hand_cards)
+        self.assertTrue(player.get_best_hand_name() == "One Pair", "Failed get_best_hand_name - test 1")
+
+    def test_get_player_ranking(self):
+        player = Player(player_name='Player 1')
+        hole_cards = [f'9{H}', f'K{H}']
+        community_cards = [f'9{D}', f'Q{S}', f'4{C}', f'3{S}', f'2{S}']
+        hand_cards = hole_cards + community_cards
+
+        player.set_all_cards(hole_cards=hole_cards, community_cards=community_cards)
+        player.find_highest_ranked_hand(card_list=community_cards, hole_cards=hole_cards)
+        player.set_player_ranking(hand_cards=hand_cards)
+        self.assertTrue(player.get_player_ranking() == {'Player 1': [['One Pair', 15, 9], [13, 9]]},
+                        "Failed get_player_ranking - test 1")
+
+    def test_get_player_score(self):
+        player = Player(player_name='Player 1')
+        player.set_player_score(100)
+        self.assertTrue(player.get_player_score() == 100, "Failed get_player_score - test 1")
+
     def test_find_highest_ranked_hand(self):
         player = Player(player_name='Player 1')
 
         # Test True: Royal flush in hand
         cards_list = [f'A{H}', f'K{H}', f'Q{H}', f'J{H}', f'T{H}', f'9{S}', f'2{S}']
         player.find_highest_ranked_hand(cards_list)
-        self.assertTrue(player.best_hand_name == 'Royal Flush',
+        self.assertTrue(player._best_hand_name == 'Royal Flush',
                         "Failed determine_highest_hand - test 1")
 
         # Test True: Straight flush in hand
         cards_list = [f'5{H}', f'4{H}', f'6{H}', f'7{H}', f'8{H}', f'9{S}', f'2{S}']
         player.find_highest_ranked_hand(cards_list)
-        self.assertTrue(player.best_hand_name == 'Straight Flush',
+        self.assertTrue(player._best_hand_name == 'Straight Flush',
                         "Failed determine_highest_hand - test 2")
 
         # Test True: Four of a kind in hand
         cards_list = [f'A{H}', f'A{D}', f'A{S}', f'A{C}', f'T{H}', f'9{S}', f'2{S}']
         player.find_highest_ranked_hand(cards_list)
-        self.assertTrue(player.best_hand_name == 'Four of a Kind',
+        self.assertTrue(player._best_hand_name == 'Four of a Kind',
                         "Failed determine_highest_hand - test 3")
 
         # Test True: full house in hand
         cards_list = [f'A{H}', f'A{D}', f'A{S}', f'T{D}', f'T{H}', f'9{S}', f'2{S}']
         player.find_highest_ranked_hand(cards_list)
-        self.assertTrue(player.best_hand_name == 'Full House',
+        self.assertTrue(player._best_hand_name == 'Full House',
                         "Failed determine_highest_hand - test 4")
 
         # Test True: flush in hand
         cards_list = [f'A{H}', f'9{H}', f'2{H}', f'J{H}', f'T{H}', f'9{S}', f'2{S}']
         player.find_highest_ranked_hand(cards_list)
-        self.assertTrue(player.best_hand_name == 'Flush',
+        self.assertTrue(player._best_hand_name == 'Flush',
                         "Failed determine_highest_hand - test 5")
 
         # Test True: Straight in hand
         cards_list = [f'3{D}', f'4{C}', f'5{H}', f'6{H}', f'7{H}', f'8{S}', f'2{S}']
         player.find_highest_ranked_hand(cards_list)
-        self.assertTrue(player.best_hand_name == 'Straight',
+        self.assertTrue(player._best_hand_name == 'Straight',
                         "Failed determine_highest_hand - test 6")
 
         # Test True: Three of a kind in hand
         cards_list = [f'A{H}', f'A{D}', f'A{S}', f'J{H}', f'T{H}', f'9{S}', f'2{S}']
         player.find_highest_ranked_hand(cards_list)
-        self.assertTrue(player.best_hand_name == 'Three of a Kind',
+        self.assertTrue(player._best_hand_name == 'Three of a Kind',
                         "Failed determine_highest_hand - test 7")
 
         # Test True: Two Pair in hand
         cards_list = [f'A{H}', f'A{D}', f'J{S}', f'J{H}', f'T{H}', f'9{S}', f'2{S}']
         player.find_highest_ranked_hand(cards_list)
-        self.assertTrue(player.best_hand_name == 'Two Pair',
+        self.assertTrue(player._best_hand_name == 'Two Pair',
                         "Failed determine_highest_hand - test 8")
 
         # Test True: Three of a kind in hand
         cards_list = [f'A{H}', f'A{D}', f'4{S}', f'J{H}', f'7{H}', f'9{S}', f'2{S}']
         player.find_highest_ranked_hand(cards_list)
-        self.assertTrue(player.best_hand_name == 'One Pair',
+        self.assertTrue(player._best_hand_name == 'One Pair',
                         "Failed determine_highest_hand - test 9")
 
         # Test False: No match - High Card result
         cards_list = [f'Q{H}', f'A{D}', f'J{S}', f'9{H}', f'7{H}', f'5{S}', f'2{S}']
         player.find_highest_ranked_hand(cards_list)
-        self.assertTrue(player.best_hand_name == 'High Card',
+        self.assertTrue(player._best_hand_name == 'High Card',
                         "Failed determine_highest_hand - test 10")
 
     def test_find_royal_flush(self):
@@ -918,6 +960,38 @@ class HoldemTester(unittest.TestCase):
                         "Failed test_comparitor - test 2")
         self.assertTrue(rankings.get(3) == "Charlie",
                         "Failed test_comparitor - test 3")
+
+    # Test Game Manager
+    def test_make_players(self):
+        # Test make_players
+        # Test get_player
+        new_game = GameManager()
+        players = {'Alice', 'Bob', 'Charlie'}
+        new_game.make_players(players)
+        new_game.get_player('Alice').set_player_score(50)
+        new_game.get_player('Bob').set_player_score(80)
+        new_game.get_player('Charlie').set_player_score(65)
+
+        # Test True
+        self.assertTrue(new_game.get_player('Alice').get_player_score() == 50,
+                        "Failed test_make_players - test 1")
+        self.assertTrue(new_game.get_player('Bob').get_player_score() == 80,
+                        "Failed test_make_players - test 2")
+        self.assertTrue(new_game.get_player('Charlie').get_player_score() == 65,
+                        "Failed test_make_players - test 3")
+
+    def test_get_all_players(self):
+        new_game = GameManager()
+        players = {'Alice', 'Bob', 'Charlie'}
+        new_game.make_players(players)
+
+        list_of_players = [new_game.get_player('Alice'),
+                           new_game.get_player('Bob'),
+                           new_game.get_player('Charlie')]
+
+        # Test True
+        self.assertTrue(Counter(new_game.get_all_players()) == Counter(list_of_players),
+                        "Failed test_get_all_players - test 1")
 
 
 # Run tests:

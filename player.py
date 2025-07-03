@@ -26,24 +26,27 @@ class Player(Rankinator):
     def __init__(self, player_name: str):
         super().__init__()
         self.player_name = player_name
-        self.best_hand_and_kicker = tuple()
-        self.hole_cards = list()
-        self.all_cards = dict()
-        self.best_hand_name = str()
-        self.player_ranking = dict()
-        self.player_score = int()
+        self._best_hand_and_kicker = tuple()
+        self._hole_cards = list()
+        self._all_cards = dict()
+        self._best_hand_name = str()
+        self._player_ranking = dict()
+        self._player_score = int()
+
+    def __repr__(self):
+        return f"Player({self.player_name}, Score: {self._player_score})"
 
     # Setters and getters
     def set_hole_cards(self, cards_list: list) -> None:
-        self.hole_cards = cards_list
+        self._hole_cards = cards_list
 
     def set_best_hand_name(self, name: str) -> None:
-        self.best_hand_name = name
+        self._best_hand_name = name
         self.set_ace_high()
 
     def set_best_hand_and_kicker(self, hand_cards: list, kicker: str) -> None:
         # Accepts the best five cards list and a kicker string.
-        self.best_hand_and_kicker = (hand_cards, kicker)
+        self._best_hand_and_kicker = (hand_cards, kicker)
 
     def set_all_cards(self, hole_cards: list, community_cards: list) -> None:
         """Updates self.all_cards:
@@ -51,19 +54,19 @@ class Player(Rankinator):
             community_cards = [f'9{D}', f'Q{S}', f'4{C}', f'3{S}', f'2{S}']
                 i.e. {'9♥': 9, 'K♥': 13, '9♦': 9, 'Q♠': 12, '4♣': 4, '3♠': 3, '2♠': 2}"""
         full_card_list = hole_cards + community_cards
-        self.all_cards.clear()
+        self._all_cards.clear()
         for key in full_card_list:
-            self.all_cards.update({key: CARDS_MAP.get(key[0][0])})
+            self._all_cards.update({key: CARDS_MAP.get(key[0][0])})
 
     def set_player_ranking(self, hand_cards: list) -> None:
         # 'Player_Name': [ ['Hand Name', int(hand rank), int(high hand card rank)], [int(kicker1), int(kicker2)] ]}
-        hand_name = self.best_hand_name
+        hand_name = self._best_hand_name
         hand_rank = HANDS_MAP.get(hand_name)
-        high_hand_card_rank = self.get_highest_card(self.best_hand_and_kicker[0])
+        high_hand_card_rank = self.get_highest_card(self._best_hand_and_kicker[0])
         hole_cards = hand_cards[0:2]
         kickers = self.get_Kicker(hole_cards=hole_cards)
-        self.player_ranking = {
-            self.player_name:   [[self.best_hand_name, hand_rank, high_hand_card_rank],
+        self._player_ranking = {
+            self.player_name:   [[self._best_hand_name, hand_rank, high_hand_card_rank],
                                  [HANDS_MAP[kickers[0]], HANDS_MAP[kickers[1]]]]
         }
 
@@ -71,7 +74,7 @@ class Player(Rankinator):
         # self.all_cards must be already set
         list_of_cards = list()
         for value in cards_list:
-            list_of_cards.append(list(self.all_cards.keys())[list(self.all_cards.values()).index(value)])
+            list_of_cards.append(list(self._all_cards.keys())[list(self._all_cards.values()).index(value)])
 
         return list_of_cards
 
@@ -79,15 +82,21 @@ class Player(Rankinator):
         self.player_name = name
 
     def set_ace_high(self):
-        if self.best_hand_name in ['Straight_Flush', 'Straight']:
+        if self._best_hand_name in ['Straight_Flush', 'Straight']:
             self.ace_high = False
         else:
             self.ace_high = True
 
     def set_player_score(self, score: int) -> None:
-        self.player_score = score
+        self._player_score = score
 
-    # Tools
+    # Getters
+    # self._best_hand_and_kicker
+    # self._hole_cards
+    # self._all_cards
+    # self._best_hand_name
+    # self._player_ranking
+    # self._player_score
     def get_Kicker(self, hole_cards: list) -> list:
         """Returns the hole cards as a dictionary of 'name':value in order of rank.
         [f'K♥', f'A♥'] will return {'Ace':14, 'King':13}"""
@@ -99,7 +108,22 @@ class Player(Rankinator):
         return cards
 
     def get_best_hand_cards(self) -> list:
-        return self.best_hand_and_kicker[0]
+        return self._best_hand_and_kicker[0]
+
+    def get_hole_cards(self) -> list:
+        return self._hole_cards
+
+    def get_all_cards(self) -> dict:
+        return self._all_cards
+
+    def get_best_hand_name(self) -> str:
+        return self._best_hand_name
+
+    def get_player_ranking(self) -> dict:
+        return self._player_ranking
+
+    def get_player_score(self) -> int:
+        return self._player_score
 
     # Methods to return the best hand combination
     def find_highest_ranked_hand(self, card_list: list, hole_cards=None) -> None:
@@ -151,7 +175,7 @@ class Player(Rankinator):
 
         # Organize cards by suit
         suits = {}
-        for card, rank in self.all_cards.items():
+        for card, rank in self._all_cards.items():
             suit = card[-1]  # Last character represents the suit
             if suit not in suits:
                 suits[suit] = {}
@@ -171,7 +195,7 @@ class Player(Rankinator):
         the available cards in self.all_cards."""
         # Step 1: Organize cards by suit
         suits = {}
-        for card, rank in self.all_cards.items():
+        for card, rank in self._all_cards.items():
             _, suit = self.get_rank_and_suit(card)
             if suit not in suits:
                 suits[suit] = []
@@ -207,7 +231,7 @@ class Player(Rankinator):
         the available cards in self.all_cards."""
         # Step 1: Count occurrences of each rank
         rank_counts = {}
-        for card, rank in self.all_cards.items():
+        for card, rank in self._all_cards.items():
             rank_counts[rank] = rank_counts.get(rank, 0) + 1
 
         # Step 2: Find the rank with exactly four occurrences
@@ -222,7 +246,7 @@ class Player(Rankinator):
             return []
 
         # Step 4: Collect all cards of the Four of a Kind rank
-        four_of_a_kind_cards = [card for card, rank in self.all_cards.items() if rank == four_of_a_kind_rank]
+        four_of_a_kind_cards = [card for card, rank in self._all_cards.items() if rank == four_of_a_kind_rank]
 
         return four_of_a_kind_cards
 
@@ -231,7 +255,7 @@ class Player(Rankinator):
         the available cards in self.all_cards."""
         # Step 1: Count occurrences of each rank
         rank_counts = {}
-        for card, rank in self.all_cards.items():
+        for card, rank in self._all_cards.items():
             rank_counts[rank] = rank_counts.get(rank, 0) + 1
 
         # Step 2: Identify ranks for three of a kind and a pair
@@ -245,7 +269,7 @@ class Player(Rankinator):
 
         # Step 3: Collect cards for the Full House
         full_house_cards = [
-            card for card, rank in self.all_cards.items()
+            card for card, rank in self._all_cards.items()
             if rank == three_of_a_kind_rank or rank == pair_rank
         ]
 
@@ -256,7 +280,7 @@ class Player(Rankinator):
         the available cards in self.all_cards."""
         # Step 1: Organize cards by suit
         suits = {}
-        for card, rank in self.all_cards.items():
+        for card, rank in self._all_cards.items():
             suit = card[-1]  # The last character represents the suit
             if suit not in suits:
                 suits[suit] = []
@@ -283,7 +307,7 @@ class Player(Rankinator):
         """This method efficiently finds and returns the highest straight from
         the available cards in self.all_cards."""
         # Extract ranks and convert them to numeric values
-        possible_ranks = self.strip_suit(list(self.all_cards.keys()))
+        possible_ranks = self.strip_suit(list(self._all_cards.keys()))
         possible_ranks = self.convert_cards_to_integers(possible_ranks)
         # Remove duplicates and sort the ranks as integers
         sorted_ranks = sorted(set(possible_ranks))
@@ -308,7 +332,7 @@ class Player(Rankinator):
         from the available cards in self.all_cards."""
         # Step 1: Count occurrences of each rank
         rank_counts = {}
-        for card, rank in self.all_cards.items():
+        for card, rank in self._all_cards.items():
             rank_counts[rank] = rank_counts.get(rank, 0) + 1
 
         # Step 2: Identify the highest rank with exactly three occurrences
@@ -323,7 +347,7 @@ class Player(Rankinator):
             return []
 
         # Step 4: Collect the cards for the Three of a Kind rank
-        three_of_a_kind_cards = [card for card, rank in self.all_cards.items() if rank == three_of_a_kind_rank]
+        three_of_a_kind_cards = [card for card, rank in self._all_cards.items() if rank == three_of_a_kind_rank]
 
         return three_of_a_kind_cards
 
@@ -336,7 +360,7 @@ class Player(Rankinator):
             only take two for the pair."""
         # Step 1: Count occurrences of each rank
         rank_counts = {}
-        for card, rank in self.all_cards.items():
+        for card, rank in self._all_cards.items():
             rank_counts[rank] = rank_counts.get(rank, 0) + 1
 
         # Step 2: Identify ranks with exactly two occurrences and sort them
@@ -347,14 +371,14 @@ class Player(Rankinator):
         highest_two_pairs = pair_ranks[:2]
 
         # Step 4: Collect the cards for the highest two pairs
-        two_pair_cards = [card for card, rank in self.all_cards.items() if rank in highest_two_pairs]
+        two_pair_cards = [card for card, rank in self._all_cards.items() if rank in highest_two_pairs]
 
         return two_pair_cards
 
     def find_highest_pair(self) -> list:
         # Step 1: Count occurrences of each rank
         rank_counts = {}
-        for card, rank in self.all_cards.items():
+        for card, rank in self._all_cards.items():
             rank_counts[rank] = rank_counts.get(rank, 0) + 1
 
         # Step 2: Identify ranks with exactly two occurrences (pairs)
@@ -367,14 +391,14 @@ class Player(Rankinator):
             return []  # Return an empty list if no pairs are found
 
         # Step 4: Collect the cards for the highest pair
-        highest_pair_cards = [card for card, rank in self.all_cards.items() if rank == highest_pair_rank]
+        highest_pair_cards = [card for card, rank in self._all_cards.items() if rank == highest_pair_rank]
 
         return highest_pair_cards
 
     def find_high_cards(self) -> list:
         # Find the top 5 cards
         # Sort dictionary items by rank (value), descending
-        sorted_cards = sorted(self.all_cards.items(), key=lambda item: item[1], reverse=True)
+        sorted_cards = sorted(self._all_cards.items(), key=lambda item: item[1], reverse=True)
         highest_cards = [card for card, _ in sorted_cards[:5]]
 
         return highest_cards
@@ -396,7 +420,7 @@ class Player(Rankinator):
                       'Three_of_a_Kind': 4000,
                       'Two_Pair': 3000,
                       'One_Pair': 2000}
-        score_total += base_score.get(self.best_hand_name)
+        score_total += base_score.get(self._best_hand_name)
         score_total += self.tally_cards_score(hand_cards)
         return score_total
 

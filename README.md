@@ -56,7 +56,7 @@ Makes the judgement of whose hand is highest.
 ## Table
 manages the visual information output to the console.
 
-## Run
+## GameManager
 Game manager. Runs the game and starts the next round etc. 
 
 ## Deck 
