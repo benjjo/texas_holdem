@@ -61,3 +61,55 @@ Game manager. Runs the game and starts the next round etc.
 
 ## Deck 
 Constants associated with the deck and cards. 
+
+## Language
+
+Texas Hold’em Poker Terms & Definitions
+
+| Term             | Definition |
+|------------------|------------|
+| **Pre-Flop**     | The stage after players receive their two hole cards but before any community cards are dealt. |
+| **Flop**         | The first three community cards dealt face up. |
+| **Turn**         | The fourth community card, also called "Fourth Street." |
+| **River**        | The fifth and final community card, also called "Fifth Street." |
+| **Showdown**     | When players reveal their hands to determine the winner after the final betting round. |
+| **Check**        | Decline to bet, while keeping the option to call or raise later in the round. |
+| **Bet**          | Place chips into the pot. |
+| **Call**         | Match the current highest bet made by another player. |
+| **Raise**        | Increase the current bet amount. |
+| **Re-raise**     | Raise again after another player has already raised. |
+| **Fold**         | Discard your hand and forfeit the pot. |
+| **All-In**       | Bet all your remaining chips. |
+| **Pot**          | The total chips wagered in the current hand. |
+| **Pot Odds**     | Ratio of the pot size to the cost of a contemplated call. |
+| **3-Bet**        | A re-raise, i.e. the third bet in a betting sequence. |
+| **C-Bet**        | A continuation bet made on the flop by the pre-flop raiser. |
+| **Value Bet**    | Bet made hoping to be called by worse hands. |
+| **Bluff**        | Bet or raise with a weak hand to make opponents fold stronger hands. |
+| **Semi-Bluff**   | Bet with a drawing hand that could become strong later. |
+| **Check-Raise**  | Check, then raise after an opponent bets. |
+| **Overbet**      | Betting more than the current pot size. |
+| **Underbet**     | Betting much less than the pot. |
+| **Outs**         | Cards that will improve your hand to likely win. |
+| **Drawing Dead** | No remaining cards can improve your hand to win. |
+| **Kicker**       | The next highest card outside your main hand, used to break ties. |
+| **Nuts**         | The best possible hand at a given time. |
+| **Set**          | Three of a kind using a pocket pair plus one community card. |
+| **Trips**        | Three of a kind using one hole card and two community cards. |
+| **Straight**     | Five sequential cards of any suits. |
+| **Flush**        | Five cards of the same suit, not in sequence. |
+| **Full House**   | Three of a kind plus a pair. |
+| **Quads**        | Four of a kind. |
+| **Straight Flush** | Five sequential cards of the same suit. |
+| **Royal Flush**  | A♠ K♠ Q♠ J♠ 10♠ — the highest possible straight flush. |
+| **Blinds**       | Forced bets (small blind & big blind) posted before cards are dealt. |
+| **Button**       | Marks who is acting as dealer for the hand; moves clockwise. |
+| **UTG**          | "Under the Gun" — the player immediately left of the big blind, acts first pre-flop. |
+| **Cutoff**       | Seat right before the button, often used for stealing blinds. |
+| **Hijack**       | Seat right before the cutoff. |
+| **Heads-Up**     | A hand contested between only two players. |
+| **Muck**         | To fold or discard your hand without showing it. |
+| **Slow Roll**    | Taking unnecessary time to reveal a winning hand; considered poor etiquette. |
+| **Snap Call**    | Instantly calling a bet, showing strong confidence. |
+| **Tank**         | Taking a long time to think before acting. |
+| **Straddle**     | An optional blind bet made before cards are dealt to "buy" last action pre-flop. |

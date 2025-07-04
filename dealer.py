@@ -8,11 +8,12 @@ class Dealer:
         self._flop = list()
         self._turn = str()
         self._river = str()
+        self._community_cards = list()
+        self._deck = DECK.copy()
 
     # Setters
     def set_burner(self, card: str) -> None:
         self._burners.append(card)
-    # Setters and getters
 
     def set_flop(self, card: str) -> None:
         self._flop.append(card)
@@ -23,7 +24,13 @@ class Dealer:
     def set_river(self, card: str) -> None:
         self._river = card
 
-    # Setters
+    def set_community_cards(self, card: str) -> None:
+        self._community_cards.append(card)
+
+    def clear_community_cards(self) -> None:
+        self._community_cards = list()
+
+    # Getters
     def get_burners(self) -> list:
         return self._burners
 
@@ -36,11 +43,55 @@ class Dealer:
     def get_river(self) -> str:
         return self._river
 
+    def get_deck(self) -> list:
+        return self._deck
+
+    def get_community_cards(self) -> list:
+        return self._community_cards
+
+    def new_deck(self) -> None:
+        self._burners = list()
+        self._flop = list()
+        self._turn = str()
+        self._river = str()
+        self._community_cards = list()
+        self._deck = DECK.copy()
+        random.shuffle(self._deck)
+
     # Tools
     def shuffle_deck(self):
-        burner_deck = DECK.copy()
-        random.shuffle(burner_deck)
-        return burner_deck
+        return random.shuffle(self.get_deck())
 
-    def deal_out_cards_and_flop(self):
-        pass
+    def deal_out_cards_and_flop(self, players, game):
+        for card_count in range(2):
+            for person in players:
+                game.get_player(person).set_pocket_card(self._deck.pop())
+        # Burn a card
+        self.set_burner(self._deck.pop())
+        # Deal out the Flop.
+        for card_count in range(3):
+            self.set_flop(self._deck.pop())
+        # Update the community cards
+        self._community_cards.append(self.get_flop())
+
+    def deal_out_a_single_card(self):
+        # Burn a card
+        self.set_burner(self._deck.pop())
+        # Deal out the Turn/River.
+        # Update the community cards
+        if self.get_turn():
+            self.set_river(self._deck.pop())
+            self._community_cards.append(self.get_river())
+        else:
+            self.set_turn(self._deck.pop())
+            self._community_cards.append(self.get_turn())
+
+    def run_it_again(self):
+        # Burn a card
+        self.set_burner(self._deck.pop())
+        self.clear_community_cards()
+        for i in range(5):
+            self.set_community_cards(self._deck.pop())
+
+
+

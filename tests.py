@@ -106,30 +106,48 @@ class HoldemTester(unittest.TestCase):
     # Test dealer class
     def test_setters_and_getters(self):
         new_dealer = Dealer()
-        flop_cards = [f'T{D}', '5{H}', '6{S}']
+        flop_cards = [f'T{D}', f'5{H}', f'6{S}']
         turn_card = f'T{H}'
         river_card = f'A{D}'
-        burners = [f'T{C}', '5{C}', '6{C}']
+        burners = [f'T{C}', f'5{C}', f'6{C}']
+        community_cards = [f'T{D}', f'5{H}', f'6{S}', f'T{H}', f'A{D}']
 
         # Setters
-        new_dealer.set_flop(flop_cards.pop())
-        new_dealer.set_flop(flop_cards.pop())
-        new_dealer.set_flop(flop_cards.pop())
+        new_dealer.set_flop(flop_cards[0])
+        new_dealer.set_flop(flop_cards[1])
+        new_dealer.set_flop(flop_cards[2])
         new_dealer.set_turn(turn_card)
         new_dealer.set_river(river_card)
-        new_dealer.set_burner(burners.pop())
-        new_dealer.set_burner(burners.pop())
-        new_dealer.set_burner(burners.pop())
+        new_dealer.set_burner(burners[0])
+        new_dealer.set_burner(burners[1])
+        new_dealer.set_burner(burners[2])
+        new_dealer.set_community_cards(flop_cards[0])
+        new_dealer.set_community_cards(flop_cards[1])
+        new_dealer.set_community_cards(flop_cards[2])
+        new_dealer.set_community_cards(turn_card)
+        new_dealer.set_community_cards(river_card)
 
         # Test True
-        self.assertTrue(Counter(new_dealer.get_flop()) == Counter([f'T{D}', '5{H}', '6{S}']),
+        self.assertTrue(Counter(new_dealer.get_flop()) == Counter([f'T{D}', f'5{H}', f'6{S}']),
                         "Failed test_setters_and_getters - test 1")
         self.assertTrue(new_dealer.get_turn() == turn_card,
                         "Failed test_setters_and_getters - test 2")
         self.assertTrue(new_dealer.get_river() == river_card,
                         "Failed test_setters_and_getters - test 3")
-        self.assertTrue(Counter(new_dealer.get_burners()) == Counter([f'T{C}', '5{C}', '6{C}']),
+        self.assertTrue(Counter(new_dealer.get_burners()) == Counter([f'T{C}', f'5{C}', f'6{C}']),
                         "Failed test_setters_and_getters - test 4")
+        self.assertTrue(Counter(new_dealer.get_community_cards()) == Counter(community_cards),
+                        "Failed test_setters_and_getters - test 5")
+
+    def test_new_deck(self):
+        dealer = Dealer()
+
+        # Test True
+        self.assertTrue(len(dealer.get_deck()) == 52, "Failed test_new_deck - test 1")
+        dealer.get_deck().pop()
+        self.assertTrue(len(dealer.get_deck()) == 51, "Failed test_new_deck - test 2")
+        dealer.new_deck()
+        self.assertTrue(len(dealer.get_deck()) == 52, "Failed test_new_deck - test 3")
 
     def test_shuffle_deck(self):
         dealer = Dealer()
@@ -139,8 +157,43 @@ class HoldemTester(unittest.TestCase):
                         shuffled_deck != sorted_deck[::-1],
                         "Failed test_shuffle_deck - test 1")
 
-    def test_deal_out_cards(self):
-        pass
+    def test_deal_out_cards_and_flop(self):
+        game = GameManager()
+        dealer = Dealer()
+        dealer.new_deck()
+        players = {'Alice', 'Bob', 'Charlie'}
+        game.make_players(players)
+        dealer.deal_out_cards_and_flop(players, game)
+
+        # Test True
+        self.assertTrue(len(dealer.get_deck()) == (52 - 6 - 1 - 3),
+                        "Failed test_deal_out_cards_and_flop - test 1")
+        dealer.new_deck()
+        self.assertTrue(len(dealer.get_deck()) == 52,
+                        "Failed test_deal_out_cards_and_flop - test 2")
+
+    def test_deal_out_a_single_card(self):
+        game = GameManager()
+        dealer = Dealer()
+        dealer.new_deck()
+        players = {'Alice', 'Bob', 'Charlie'}
+        game.make_players(players)
+
+        # Test True
+        dealer.deal_out_a_single_card()
+        self.assertTrue(len(dealer.get_deck()) == (52 - 1 - 1),
+                        "Failed deal_out_a_single_card - test 1")
+        self.assertTrue(bool(dealer.get_turn()),
+                        "Failed deal_out_a_single_card - test 2")
+        self.assertFalse(bool(dealer.get_river()),
+                         "Failed deal_out_a_single_card - test 3")
+        dealer.deal_out_a_single_card()
+        self.assertTrue(len(dealer.get_deck()) == (52 - 1 - 1 - 1 - 1),
+                        "Failed deal_out_a_single_card - test 4")
+        self.assertTrue(bool(dealer.get_turn()),
+                        "Failed deal_out_a_single_card - test 5")
+        self.assertTrue(bool(dealer.get_river()),
+                        "Failed deal_out_a_single_card - test 6")
 
     # Test the Ranker class
     def test_set_community_cards(self):

@@ -1,7 +1,5 @@
 from dealer import *
-from player import *
 from game_manager import *
-from ranker import *
 from bookie import *
 from adjudicator import *
 
