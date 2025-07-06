@@ -600,8 +600,8 @@ class HoldemTester(unittest.TestCase):
         hand_cards = hole_cards + community_cards
 
         # Set all_cards to {'9♥': 9, 'K♥': 13, '9♦': 9, 'Q♠': 12, '4♣': 4, '3♠': 3, '2♠': 2}
-        player.set_all_cards(hole_cards=hole_cards, community_cards=community_cards)
-        player.find_highest_ranked_hand(card_list=community_cards, hole_cards=hole_cards)
+        player.set_all_cards(pocket_cards=hole_cards, community_cards=community_cards)
+        player.find_highest_ranked_hand(card_list=community_cards, pocket_cards=hole_cards)
         # Set player ranking to: {'Player 1': [ ['One Pair', 15, 9], [13, 9] ]}
         player.set_player_ranking(hand_cards=hand_cards)
 
@@ -689,7 +689,7 @@ class HoldemTester(unittest.TestCase):
         player = Player(player_name='Player 1')
         player.set_pocket_card(f'A{H}')
         player.set_pocket_card(f'K{H}')
-        self.assertTrue(Counter(player.get_hole_cards()) == Counter([f'A{H}', f'K{H}']),
+        self.assertTrue(Counter(player.get_pocket_cards()) == Counter([f'A{H}', f'K{H}']),
                         "Failed get_hole_cards - test 1")
 
     def test_get_all_cards(self):
@@ -706,8 +706,8 @@ class HoldemTester(unittest.TestCase):
         community_cards = [f'9{D}', f'Q{S}', f'4{C}', f'3{S}', f'2{S}']
         hand_cards = hole_cards + community_cards
 
-        player.set_all_cards(hole_cards=hole_cards, community_cards=community_cards)
-        player.find_highest_ranked_hand(card_list=community_cards, hole_cards=hole_cards)
+        player.set_all_cards(pocket_cards=hole_cards, community_cards=community_cards)
+        player.find_highest_ranked_hand(card_list=community_cards, pocket_cards=hole_cards)
         player.set_player_ranking(hand_cards=hand_cards)
         self.assertTrue(player.get_best_hand_name() == "One Pair", "Failed get_best_hand_name - test 1")
 
@@ -717,8 +717,8 @@ class HoldemTester(unittest.TestCase):
         community_cards = [f'9{D}', f'Q{S}', f'4{C}', f'3{S}', f'2{S}']
         hand_cards = hole_cards + community_cards
 
-        player.set_all_cards(hole_cards=hole_cards, community_cards=community_cards)
-        player.find_highest_ranked_hand(card_list=community_cards, hole_cards=hole_cards)
+        player.set_all_cards(pocket_cards=hole_cards, community_cards=community_cards)
+        player.find_highest_ranked_hand(card_list=community_cards, pocket_cards=hole_cards)
         player.set_player_ranking(hand_cards=hand_cards)
         self.assertTrue(player.get_player_ranking() == {'Player 1': [['One Pair', 15, 9], [13, 9]]},
                         "Failed get_player_ranking - test 1")
@@ -797,14 +797,14 @@ class HoldemTester(unittest.TestCase):
         hole_cards = [f'A{H}', f'K{H}']
         community_cards = [f'Q{H}', f'J{H}', f'T{H}', f'9{H}', f'2{S}']
         high_hand_list = [f'A{H}', f'K{H}', f'Q{H}', f'J{H}', f'T{H}']
-        player.set_all_cards(hole_cards=hole_cards, community_cards=community_cards)
+        player.set_all_cards(pocket_cards=hole_cards, community_cards=community_cards)
         self.assertListEqual(player.find_royal_flush(), high_hand_list, 'Failed find_royal_flush - Test 1')
 
         # Test ListEqual: Royal Flush returned and not the lower suited (hole cards with lower cards)
         hole_cards = [f'Q{H}', f'9{H}']
         community_cards = [f'A{H}', f'J{H}', f'T{H}', f'K{H}', f'2{S}']
         high_hand_list = [f'A{H}', f'K{H}', f'Q{H}', f'J{H}', f'T{H}']
-        player.set_all_cards(hole_cards=hole_cards, community_cards=community_cards)
+        player.set_all_cards(pocket_cards=hole_cards, community_cards=community_cards)
         self.assertListEqual(player.find_royal_flush(), high_hand_list, 'Failed find_royal_flush - Test 1')
 
     def test_find_highest_straight_flush(self):
@@ -813,7 +813,7 @@ class HoldemTester(unittest.TestCase):
         hole_cards = [f'2{S}', f'K{H}']
         community_cards = [f'Q{H}', f'J{H}', f'T{H}', f'9{H}', f'3{S}']
         high_hand_list = [f'9{H}', f'T{H}', f'J{H}', f'Q{H}', f'K{H}']
-        player.set_all_cards(hole_cards=hole_cards, community_cards=community_cards)
+        player.set_all_cards(pocket_cards=hole_cards, community_cards=community_cards)
         self.assertListEqual(player.find_highest_straight_flush(), high_hand_list,
                              'Failed find_highest_straight_flush - Test 1')
 
@@ -821,7 +821,7 @@ class HoldemTester(unittest.TestCase):
         hole_cards = [f'7{H}', f'K{H}']
         community_cards = [f'Q{H}', f'J{H}', f'T{H}', f'9{H}', f'8{H}']
         high_hand_list = [f'9{H}', f'T{H}', f'J{H}', f'Q{H}', f'K{H}']
-        player.set_all_cards(hole_cards=hole_cards, community_cards=community_cards)
+        player.set_all_cards(pocket_cards=hole_cards, community_cards=community_cards)
         self.assertListEqual(player.find_highest_straight_flush(), high_hand_list,
                              'Failed find_highest_straight_flush - Test 2')
 
@@ -831,14 +831,14 @@ class HoldemTester(unittest.TestCase):
         hole_cards = [f'9{H}', f'K{H}']
         community_cards = [f'9{D}', f'9{S}', f'9{C}', f'3{S}', f'2{S}']
         high_hand_list = [f'9{H}', f'9{D}', f'9{S}', f'9{C}']
-        player.set_all_cards(hole_cards=hole_cards, community_cards=community_cards)
+        player.set_all_cards(pocket_cards=hole_cards, community_cards=community_cards)
         self.assertTrue(player.all_cards_in_list(player.find_four_of_a_kind(), high_hand_list),
                         'Failed find_four_of_a_kind - Test 1')
         # Test True
         hole_cards = [f'2{S}', f'K{H}']
         community_cards = [f'9{D}', f'9{S}', f'9{C}', f'3{S}', f'9{H}']
         high_hand_list = [f'9{H}', f'9{D}', f'9{S}', f'9{C}']
-        player.set_all_cards(hole_cards=hole_cards, community_cards=community_cards)
+        player.set_all_cards(pocket_cards=hole_cards, community_cards=community_cards)
         self.assertTrue(player.all_cards_in_list(player.find_four_of_a_kind(), high_hand_list),
                         'Failed find_four_of_a_kind - Test 2')
 
@@ -848,14 +848,14 @@ class HoldemTester(unittest.TestCase):
         hole_cards = [f'9{H}', f'9{C}']
         community_cards = [f'9{D}', f'A{S}', f'A{C}', f'3{S}', f'2{S}']
         high_hand_list = [f'9{H}', f'9{C}', f'9{D}', f'A{S}', f'A{C}']
-        player.set_all_cards(hole_cards=hole_cards, community_cards=community_cards)
+        player.set_all_cards(pocket_cards=hole_cards, community_cards=community_cards)
         self.assertTrue(player.all_cards_in_list(player.find_highest_boat(), high_hand_list),
                         'Failed find_highest_boat - Test 1')
         # Test True
         hole_cards = [f'9{H}', f'9{C}']
         community_cards = [f'9{D}', f'A{S}', f'A{C}', f'A{H}', f'2{S}']
         high_hand_list = [f'9{H}', f'9{C}', f'A{S}', f'A{C}', f'A{H}']
-        player.set_all_cards(hole_cards=hole_cards, community_cards=community_cards)
+        player.set_all_cards(pocket_cards=hole_cards, community_cards=community_cards)
         self.assertTrue(player.all_cards_in_list(player.find_highest_boat(), high_hand_list),
                         'Failed find_highest_boat - Test 2')
 
@@ -865,14 +865,14 @@ class HoldemTester(unittest.TestCase):
         hole_cards = [f'9{H}', f'T{H}']
         community_cards = [f'2{H}', f'4{H}', f'A{H}', f'3{S}', f'2{S}']
         high_hand_list = [f'9{H}', f'T{H}', f'2{H}', f'4{H}', f'A{H}']
-        player.set_all_cards(hole_cards=hole_cards, community_cards=community_cards)
+        player.set_all_cards(pocket_cards=hole_cards, community_cards=community_cards)
         self.assertTrue(player.all_cards_in_list(player.find_highest_flush(), high_hand_list),
                         'Failed find_highest_flush - Test 1')
         # Test True
         hole_cards = [f'9{H}', f'T{H}']
         community_cards = [f'K{H}', f'4{H}', f'A{H}', f'3{H}', f'2{H}']
         high_hand_list = [f'A{H}', f'K{H}', f'T{H}', f'9{H}', f'4{H}']
-        player.set_all_cards(hole_cards=hole_cards, community_cards=community_cards)
+        player.set_all_cards(pocket_cards=hole_cards, community_cards=community_cards)
         self.assertTrue(player.all_cards_in_list(player.find_highest_flush(), high_hand_list),
                         'Failed find_highest_flush - Test 2')
 
@@ -882,7 +882,7 @@ class HoldemTester(unittest.TestCase):
         hole_cards = [f'2{S}', f'K{H}']
         community_cards = [f'Q{H}', f'J{H}', f'T{H}', f'9{H}', f'3{S}']
         high_hand_list = [f'9{H}', f'T{H}', f'J{H}', f'Q{H}', f'K{H}']
-        player.set_all_cards(hole_cards=hole_cards, community_cards=community_cards)
+        player.set_all_cards(pocket_cards=hole_cards, community_cards=community_cards)
 
         # Test ListEqual: Royal Flush returned and not the lower suited
         self.assertListEqual(player.find_highest_straight(), high_hand_list,
@@ -891,14 +891,14 @@ class HoldemTester(unittest.TestCase):
         # Test ListEqual: High straight returned, not the lower straight
         hole_cards = [f'2{H}', f'3{D}']
         cards_list = [f'5{S}', f'4{C}', f'7{H}', f'6{D}', f'8{S}']
-        player.set_all_cards(hole_cards=hole_cards, community_cards=cards_list)
+        player.set_all_cards(pocket_cards=hole_cards, community_cards=cards_list)
         self.assertListEqual(player.find_highest_straight(), [f'4{C}', f'5{S}', f'6{D}', f'7{H}', f'8{S}'],
                              'Failed find_highest_straight - test 2')
 
         # Test ListEqual: High straight returned (2-6), not the lower straight (A-5)
         hole_cards = [f'2{H}', f'3{D}']
         cards_list = [f'5{S}', f'4{C}', f'J{H}', f'6{D}', f'A{S}']
-        player.set_all_cards(hole_cards=hole_cards, community_cards=cards_list)
+        player.set_all_cards(pocket_cards=hole_cards, community_cards=cards_list)
         self.assertListEqual(player.find_highest_straight(), [f'2{H}', f'3{D}', f'4{C}', f'5{S}', f'6{D}'],
                              'Failed find_highest_straight - test 3')
 
@@ -908,14 +908,14 @@ class HoldemTester(unittest.TestCase):
         hole_cards = [f'9{H}', f'K{H}']
         community_cards = [f'9{D}', f'9{S}', f'4{C}', f'3{S}', f'2{S}']
         high_hand_list = [f'9{H}', f'9{D}', f'9{S}']
-        player.set_all_cards(hole_cards=hole_cards, community_cards=community_cards)
+        player.set_all_cards(pocket_cards=hole_cards, community_cards=community_cards)
         self.assertTrue(player.all_cards_in_list(player.find_highest_three_of_a_kind(), high_hand_list),
                         'Failed find_highest_three_of_a_kind - Test 1')
         # Test True
         hole_cards = [f'9{H}', f'K{H}']
         community_cards = [f'9{D}', f'9{S}', f'A{C}', f'A{S}', f'A{H}']
         high_hand_list = [f'A{C}', f'A{S}', f'A{H}']
-        player.set_all_cards(hole_cards=hole_cards, community_cards=community_cards)
+        player.set_all_cards(pocket_cards=hole_cards, community_cards=community_cards)
         self.assertTrue(player.all_cards_in_list(player.find_highest_three_of_a_kind(), high_hand_list),
                         'Failed find_highest_three_of_a_kind - Test 2')
 
@@ -925,7 +925,7 @@ class HoldemTester(unittest.TestCase):
         hole_cards = [f'9{H}', f'K{H}']
         community_cards = [f'9{D}', f'K{S}', f'4{C}', f'3{S}', f'2{S}']
         high_hand_list = [f'9{H}', f'9{D}', f'K{H}', f'K{S}']
-        player.set_all_cards(hole_cards=hole_cards, community_cards=community_cards)
+        player.set_all_cards(pocket_cards=hole_cards, community_cards=community_cards)
         self.assertTrue(player.all_cards_in_list(player.find_highest_two_pair(), high_hand_list),
                         'Failed find_highest_two_pair - Test 1')
 
@@ -933,7 +933,7 @@ class HoldemTester(unittest.TestCase):
         hole_cards = [f'9{H}', f'K{H}']
         community_cards = [f'9{D}', f'K{S}', f'A{C}', f'A{S}', f'2{S}']
         high_hand_list = [f'K{H}', f'K{S}', f'A{C}', f'A{S}']
-        player.set_all_cards(hole_cards=hole_cards, community_cards=community_cards)
+        player.set_all_cards(pocket_cards=hole_cards, community_cards=community_cards)
         self.assertTrue(player.all_cards_in_list(player.find_highest_two_pair(), high_hand_list),
                         'Failed find_highest_two_pair - Test 2')
 
@@ -943,14 +943,14 @@ class HoldemTester(unittest.TestCase):
         hole_cards = [f'9{H}', f'K{H}']
         community_cards = [f'9{D}', f'Q{S}', f'4{C}', f'3{S}', f'2{S}']
         high_hand_list = [f'9{H}', f'9{D}']
-        player.set_all_cards(hole_cards=hole_cards, community_cards=community_cards)
+        player.set_all_cards(pocket_cards=hole_cards, community_cards=community_cards)
         self.assertTrue(player.all_cards_in_list(player.find_highest_pair(), high_hand_list),
                         'Failed find_highest_pair - Test 1')
         # Test True
         hole_cards = [f'9{H}', f'K{H}']
         community_cards = [f'8{D}', f'8{S}', f'4{C}', f'3{S}', f'2{S}']
         high_hand_list = [f'8{D}', f'8{S}']
-        player.set_all_cards(hole_cards=hole_cards, community_cards=community_cards)
+        player.set_all_cards(pocket_cards=hole_cards, community_cards=community_cards)
         self.assertTrue(player.all_cards_in_list(player.find_highest_pair(), high_hand_list),
                         'Failed find_highest_pair - Test 2')
 
@@ -960,7 +960,7 @@ class HoldemTester(unittest.TestCase):
         # Test True
         hole_cards = [f'9{H}', f'K{H}']
         community_cards = [f'9{D}', f'K{S}', f'4{C}', f'3{S}', f'2{S}']
-        player.set_all_cards(hole_cards=hole_cards, community_cards=community_cards)
+        player.set_all_cards(pocket_cards=hole_cards, community_cards=community_cards)
         self.assertTrue(Counter(player.find_high_cards()) == Counter([f'K{H}', f'K{S}', f'9{H}', f'9{D}', f'4{C}']),
                         'Failed find_high_cards - Test 1')
 

@@ -10,10 +10,10 @@ class Player(Rankinator):
         ----------
         self.best_hand_and_kicker : tuple
             Stores the hand and the kicker. eg ['A♥', 'K♥', 'Q♥', 'J♥', 'T♥'], 'A♥'
-        self.hole_cards : list()
-            Stores the hole cards. eg ['A♥', 'K♥']
+        self.pocket_cards : list()
+            Stores the pocket cards. eg ['A♥', 'K♥']
         self.all_cards : dict()
-            Holds the hole cards and the community cards and their respective ranks for this player. eg
+            Holds the pocket cards and the community cards and their respective ranks for this player. eg
             {'K♥': 13, 'Q♥': 12, 'J♥': 11, 'T♥': 10, '9♠': 9, '2♠': 2, 'T♠': 10}
         self.best_hand_name : str()
             Holds the name of the best hand. eg 'Royal Flush'
@@ -49,12 +49,12 @@ class Player(Rankinator):
         # Accepts the best five cards list and a kicker string.
         self._best_hand_and_kicker = (hand_cards, kicker)
 
-    def set_all_cards(self, hole_cards: list, community_cards: list) -> None:
+    def set_all_cards(self, pocket_cards: list, community_cards: list) -> None:
         """Updates self.all_cards:
-            hole_cards = [f'9{H}', f'K{H}']
+            pocket_cards = [f'9{H}', f'K{H}']
             community_cards = [f'9{D}', f'Q{S}', f'4{C}', f'3{S}', f'2{S}']
                 i.e. {'9♥': 9, 'K♥': 13, '9♦': 9, 'Q♠': 12, '4♣': 4, '3♠': 3, '2♠': 2}"""
-        full_card_list = hole_cards + community_cards
+        full_card_list = pocket_cards + community_cards
         self._all_cards.clear()
         for key in full_card_list:
             self._all_cards.update({key: CARDS_MAP.get(key[0][0])})
@@ -64,8 +64,8 @@ class Player(Rankinator):
         hand_name = self._best_hand_name
         hand_rank = HANDS_MAP.get(hand_name)
         high_hand_card_rank = self.get_highest_card(self._best_hand_and_kicker[0])
-        hole_cards = hand_cards[0:2]
-        kickers = self.get_Kicker(hole_cards=hole_cards)
+        pocket_cards = hand_cards[0:2]
+        kickers = self.get_Kicker(pocket_cards=pocket_cards)
         self._player_ranking = {
             self.player_name:   [[self._best_hand_name, hand_rank, high_hand_card_rank],
                                  [HANDS_MAP[kickers[0]], HANDS_MAP[kickers[1]]]]
@@ -93,16 +93,16 @@ class Player(Rankinator):
 
     # Getters
     # self._best_hand_and_kicker
-    # self._hole_cards
+    # self._pocket_cards
     # self._all_cards
     # self._best_hand_name
     # self._player_ranking
     # self._player_score
-    def get_Kicker(self, hole_cards: list) -> list:
-        """Returns the hole cards as a dictionary of 'name':value in order of rank.
+    def get_Kicker(self, pocket_cards: list) -> list:
+        """Returns the pocket cards as a dictionary of 'name':value in order of rank.
         [f'K♥', f'A♥'] will return {'Ace':14, 'King':13}"""
-        sorted_hole_card = self.convert_cards_to_integers(self.strip_suit(hole_cards))
-        rank = sorted(sorted_hole_card)
+        sorted_pocket_card = self.convert_cards_to_integers(self.strip_suit(pocket_cards))
+        rank = sorted(sorted_pocket_card)
         cards = list()
         cards.append(RANKS_MAP[rank.pop()])
         cards.append(RANKS_MAP[rank.pop()])
@@ -111,7 +111,7 @@ class Player(Rankinator):
     def get_best_hand_cards(self) -> list:
         return self._best_hand_and_kicker[0]
 
-    def get_hole_cards(self) -> list:
+    def get_pocket_cards(self) -> list:
         return self._pocket_cards
 
     def get_all_cards(self) -> dict:
@@ -127,14 +127,14 @@ class Player(Rankinator):
         return self._player_score
 
     # Methods to return the best hand combination
-    def find_highest_ranked_hand(self, card_list: list, hole_cards=None) -> None:
-        """Send the community cards and Hole cards to this method to determine:
+    def find_highest_ranked_hand(self, card_list: list, pocket_cards=None) -> None:
+        """Send the community cards and pocket cards to this method to determine:
                 - The name of the highest hand. Defaults to kicker if no hand exists.
                 - Sets the highest card hand to self.best_hand_name
                 - Sets the kicker"""
-        card_list = card_list if not hole_cards else card_list + hole_cards
-        hole_cards = card_list[0:2] if not hole_cards else hole_cards
-        kicker = self.get_Kicker(hole_cards)[0]
+        card_list = card_list if not pocket_cards else card_list + pocket_cards
+        pocket_cards = card_list[0:2] if not pocket_cards else pocket_cards
+        kicker = self.get_Kicker(pocket_cards)[0]
         map_hand_to_function = {'Royal_Flush': self.find_royal_flush(),
                                 'Straight_Flush': self.find_highest_straight_flush(),
                                 'Four_of_a_Kind': self.find_four_of_a_kind(),

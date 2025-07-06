@@ -10,12 +10,12 @@ class Rankinator:
 
         Parameters
         ----------
-        self.hole_cards : list
+        self.pocket_cards : list
             Cards held by player
         self.community_cards :  list
             The cards shared by all players
         self.all_cards : list
-            Individual to each player. hole cards and community cards
+            Individual to each player. Pocket cards and community cards
         self.all_cards_ranked :  list
             A list of the integer ranks of all cards.
         self.best_hand : string
@@ -101,7 +101,7 @@ class Rankinator:
         card = substitutions.get(card[:-1], card[:-1])
         return int(card)
 
-    # hole_cards evaluators
+    # Hand type finders
     def Royal_Flush(self, cards_list: list) -> bool:
         for suit in [H, D, C, S]:
             flush_deck = self.filter_cards_by_suit(cards_list, suit)
