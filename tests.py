@@ -685,6 +685,55 @@ class HoldemTester(unittest.TestCase):
         self.assertListEqual(player.get_best_hand_cards(), [f'A{H}', f'K{H}', f'Q{H}', f'J{H}', f'T{H}'],
                              "Failed test_get_best_hand_cards - test 1")
 
+        # Test ListEqual: Straight flush
+        hand = [f'K{H}', f'Q{H}', f'J{H}', f'T{H}', f'9{H}']
+        kicker = f'A{S}'
+        player.set_best_hand_and_kicker(hand, kicker)
+        self.assertListEqual(player.get_best_hand_cards(), [f'A{H}', f'K{H}', f'Q{H}', f'J{H}', f'T{H}'],
+                             "Failed test_get_best_hand_cards - test 1")
+
+        # Test ListEqual: Royal Flush returned and not the lower suited
+        hand = [f'A{H}', f'K{H}', f'Q{H}', f'J{H}', f'T{H}']
+        kicker = f'A{S}'
+        player.set_best_hand_and_kicker(hand, kicker)
+        self.assertListEqual(player.get_best_hand_cards(), [f'A{H}', f'K{H}', f'Q{H}', f'J{H}', f'T{H}'],
+                             "Failed test_get_best_hand_cards - test 1")
+
+        # Test ListEqual: Royal Flush returned and not the lower suited
+        hand = [f'A{H}', f'K{H}', f'Q{H}', f'J{H}', f'T{H}']
+        kicker = f'A{S}'
+        player.set_best_hand_and_kicker(hand, kicker)
+        self.assertListEqual(player.get_best_hand_cards(), [f'A{H}', f'K{H}', f'Q{H}', f'J{H}', f'T{H}'],
+                             "Failed test_get_best_hand_cards - test 1")
+
+        # Test ListEqual: Royal Flush returned and not the lower suited
+        hand = [f'A{H}', f'K{H}', f'Q{H}', f'J{H}', f'T{H}']
+        kicker = f'A{S}'
+        player.set_best_hand_and_kicker(hand, kicker)
+        self.assertListEqual(player.get_best_hand_cards(), [f'A{H}', f'K{H}', f'Q{H}', f'J{H}', f'T{H}'],
+                             "Failed test_get_best_hand_cards - test 1")
+
+        # Test ListEqual: Royal Flush returned and not the lower suited
+        hand = [f'A{H}', f'K{H}', f'Q{H}', f'J{H}', f'T{H}']
+        kicker = f'A{S}'
+        player.set_best_hand_and_kicker(hand, kicker)
+        self.assertListEqual(player.get_best_hand_cards(), [f'A{H}', f'K{H}', f'Q{H}', f'J{H}', f'T{H}'],
+                             "Failed test_get_best_hand_cards - test 1")
+
+        # Test ListEqual: Royal Flush returned and not the lower suited
+        hand = [f'A{H}', f'K{H}', f'Q{H}', f'J{H}', f'T{H}']
+        kicker = f'A{S}'
+        player.set_best_hand_and_kicker(hand, kicker)
+        self.assertListEqual(player.get_best_hand_cards(), [f'A{H}', f'K{H}', f'Q{H}', f'J{H}', f'T{H}'],
+                             "Failed test_get_best_hand_cards - test 1")
+
+        # Test ListEqual: Royal Flush returned and not the lower suited
+        hand = [f'A{H}', f'K{H}', f'Q{H}', f'J{H}', f'T{H}']
+        kicker = f'A{S}'
+        player.set_best_hand_and_kicker(hand, kicker)
+        self.assertListEqual(player.get_best_hand_cards(), [f'A{H}', f'K{H}', f'Q{H}', f'J{H}', f'T{H}'],
+                             "Failed test_get_best_hand_cards - test 1")
+
     def test_get_hole_cards(self):
         player = Player(player_name='Player 1')
         player.set_pocket_card(f'A{H}')
@@ -727,6 +776,11 @@ class HoldemTester(unittest.TestCase):
         player = Player(player_name='Player 1')
         player.set_player_score(100)
         self.assertTrue(player.get_player_score() == 100, "Failed get_player_score - test 1")
+
+    def test_get_player_name(self):
+        player_name = 'Player 1'
+        player = Player(player_name='Player 1')
+        self.assertTrue(player.get_player_name() == player_name, "Failed test_get_player_name - test 1")
 
     def test_find_highest_ranked_hand(self):
         player = Player(player_name='Player 1')

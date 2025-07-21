@@ -70,9 +70,9 @@ class Dealer:
         self.set_burner(self._deck.pop())
         # Deal out the Flop.
         for card_count in range(3):
-            self.set_flop(self._deck.pop())
-        # Update the community cards
-        self._community_cards.append(self.get_flop())
+            card = self._deck.pop()
+            self.set_flop(card)
+            self._community_cards.append(card)
 
     def deal_out_a_single_card(self):
         # Burn a card

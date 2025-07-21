@@ -34,7 +34,7 @@ class Player(Rankinator):
         self._player_score = int()
 
     def __repr__(self):
-        return f"Player({self.player_name}, Score: {self._player_score})"
+        return f"Player({self.player_name}, Best Hand: {self._best_hand_name})"
 
     # Setters and getters
     def set_pocket_card(self, card: str) -> None:
@@ -100,7 +100,13 @@ class Player(Rankinator):
     # self._player_score
     def get_Kicker(self, pocket_cards: list) -> list:
         """Returns the pocket cards as a dictionary of 'name':value in order of rank.
-        [f'K♥', f'A♥'] will return {'Ace':14, 'King':13}"""
+        [f'K♥', f'A♥'] will return {'Ace':14, 'King':13}
+
+        I'm doing this wrong. I need to check a list of cards against another list of
+        cards and see which one has the next highest card.
+        The point of this should be to return the card that is the highest kicker out
+        of two hands. This shouldn't be used for ranking a hand.
+        """
         sorted_pocket_card = self.convert_cards_to_integers(self.strip_suit(pocket_cards))
         rank = sorted(sorted_pocket_card)
         cards = list()
@@ -125,6 +131,9 @@ class Player(Rankinator):
 
     def get_player_score(self) -> int:
         return self._player_score
+
+    def get_player_name(self) -> str:
+        return self.player_name
 
     # Methods to return the best hand combination
     def find_highest_ranked_hand(self, card_list: list, pocket_cards=None) -> None:
